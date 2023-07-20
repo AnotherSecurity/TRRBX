@@ -64,29 +64,105 @@ OrionLib:MakeNotification({
 
 -- MAIN AREA --
 MainTab:AddLabel("Player")
+MainTab:AddButton({
+	Name = "CFrame (X)",
+	Callback = function()
+      		repeat
+        wait()
+    until game:IsLoaded()
+    local L_134_ = game:service('Players')
+    local L_135_ = L_134_.LocalPlayer
+    repeat
+        wait()
+    until L_135_.Character
+    local L_136_ = game:service('UserInputService')
+    local L_137_ = game:service('RunService')
+    getgenv().Multiplier = 3
+    local L_138_ = true
+    local L_139_
+    L_136_.InputBegan:connect(function(L_140_arg0)
+        if L_140_arg0.KeyCode == Enum.KeyCode.LeftBracket then
+            Multiplier = Multiplier + 0.01
+            print(Multiplier)
+            wait(0.2)
+            while L_136_:IsKeyDown(Enum.KeyCode.LeftBracket) do
+                wait()
+                Multiplier = Multiplier + 0.01
+                print(Multiplier)
+            end
+        end
+        if L_140_arg0.KeyCode == Enum.KeyCode.RightBracket then
+            Multiplier = Multiplier - 0.01
+            print(Multiplier)
+            wait(0.2)
+            while L_136_:IsKeyDown(Enum.KeyCode.RightBracket) do
+                wait()
+                Multiplier = Multiplier - 0.01
+                print(Multiplier)
+            end
+        end
+        if L_140_arg0.KeyCode == Enum.KeyCode.X then
+            L_138_ = not L_138_
+            if L_138_ == true then
+                repeat
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * Multiplier
+                    game:GetService("RunService").Stepped:wait()
+                until L_138_ == false
+            end
+        end
+    end)
+db = false
+  	end    
+})
+
+
 MainTab:AddSlider({
-	Name = "WalkSpeed",
-	Min = 16,
-	Max = 100,
-	Default = 16,
+	Name = "CFrame Speed",
+	Min = 1,
+	Max = 3,
+	Default = 1,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
 	ValueName = "Speed",
 	Callback = function(Value)
-		print(Value)
+		getgenv().Multiplier = value
 	end    
 })
 
-MainTab:AddSlider({
+MainTab:AddButton({
 	Name = "Infinite Jump",
+	Callback = function()
+      		local Player = game:GetService'Players'.LocalPlayer;
+local UIS = game:GetService'UserInputService';
+
+_G.JumpHeight = 50
+
+function Action(Object, Function) if Object ~= nil then Function(Object); end end
+ 
+UIS.InputBegan:connect(function(UserInput)
+    if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then
+        Action(Player.Character.Humanoid, function(self)
+            if self:GetState() == Enum.HumanoidStateType.Jumping or self:GetState() == Enum.HumanoidStateType.Freefall then
+                Action(self.Parent.HumanoidRootPart, function(self)
+                    self.Velocity = Vector3.new(0, _G.JumpHeight, 0);
+                end)
+            end
+        end)
+    end
+end)
+  	end    
+})
+
+MainTab:AddSlider({
+	Name = "Jump Height",
 	Min = 50,
-	Max = 130,
+	Max = 250,
 	Default = 50,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
 	ValueName = "Power",
 	Callback = function(Value)
-		print(Value)
+		_G.JumpHeight = value
 	end    
 })
 
@@ -224,7 +300,7 @@ MaliciousTab:AddTextbox({
 	Default = "Players Name",
 	TextDisappear = false,
 	Callback = function(playername)
-		print(playername)
+		getgenv().plrname = playername
 	end	  
 })
 
@@ -240,7 +316,21 @@ MaliciousTab:AddToggle({
 	Name = "Auto Kill",
 	Default = false,
 	Callback = function(autokill)
-		print(autokill)
+		getgenv().target = true
+	game:GetService("RunService").heartbeat:Connect(function()
+		if getgenv().target == true then 
+		local abc = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+		game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,-1000,0)
+		game:GetService("RunService").RenderStepped:Wait()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = abc
+		end
+	end)
+	game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.6
+	wait(0.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[getgenv().plrname].Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+	wait(0.3)
+	game.Players.LocalPlayer.Character.Humanoid.HipHeight = 2
+	getgenv().target = false
 	end    
 })
 
