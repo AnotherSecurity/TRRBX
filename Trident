@@ -249,6 +249,7 @@ MaliciousTab:AddToggle({
 	Name = "Auto HIT",
 	Default = false,
 	Callback = function(autohit)
+	    
 	end
 })
 
@@ -257,7 +258,6 @@ MaliciousTab:AddToggle({
 SettingsTab:AddButton({
 	Name = "Destory UI",
 	Callback = function()
-		wait(1)
       		OrionLib:Destroy()
   	end    
 })
