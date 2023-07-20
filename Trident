@@ -249,7 +249,8 @@ MaliciousTab:AddToggle({
 	Name = "Auto HIT",
 	Default = false,
 	Callback = function(autohit)
-	
+	    
+	end
 })
 
 
