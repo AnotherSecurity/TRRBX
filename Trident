@@ -214,23 +214,7 @@ MaliciousTab:AddToggle({
 	Name = "Crash Server",
 	Default = false,
 	Callback = function(crashvalue)
-	if crashvalue == true then
-	OrionLib:MakeNotification({
-	Name = "Crashing Started!",
-	Content = "Just sit back and relax, let daddy take care of this ;)",
-	Image = nil,
-	Time = 7
-})
- -- Main code
-	end
-	if crashvalue == false then
-	OrionLib:MakeNotification({
-	Name = "Crashed Stopped",
-	Content = "HOPEFULLY it stopped",
-	Image = nil,
-	Time = 6
-})
-end
+		
 	end    
 })
 
@@ -265,24 +249,7 @@ MaliciousTab:AddToggle({
 	Name = "Auto HIT",
 	Default = false,
 	Callback = function(autohit)
-		if autohit == true then
-	OrionLib:MakeNotification({
-	Name = "AutoHit ON",
-	Content = nil,
-	Image = nil,
-	Time = 5
-})
- -- Main code here
-end
-	if autohit == false then
-	OrionLib:MakeNotification({
-	Name = "AutoHit OFF",
-	Content = nil,
-	Image = nil,
-	Time = 4
-})
-	end  
-	end
+	
 })
 
 
@@ -290,6 +257,7 @@ end
 SettingsTab:AddButton({
 	Name = "Destory UI",
 	Callback = function()
+		wait(1)
       		OrionLib:Destroy()
   	end    
 })
