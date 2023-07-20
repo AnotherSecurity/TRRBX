@@ -1,271 +1,297 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-local Window = Rayfield:CreateWindow({
-   Name = "Main",
-   LoadingTitle = "Security.lua - Trident",
-   LoadingSubtitle = "by unearnedtux on discord",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = true,
-      FileName = "Security.lua Hub"
-   },
-   Discord = {
-      Enabled = true,
-      Invite = "gTTSwadpey",
-      RememberJoins = false
-   },
-   KeySystem = true,
-   KeySettings = {
-      Title = "Secuirty.lua Entry",
-      Subtitle = "Key System",
-      Note = "Join the discrd for the key",
-      FileName = "Key",
-      SaveKey = false,
-      GrabKeyFromSite = true,
-      Key = {"https://pastebin.com/raw/DKx97GgJ"}
-   }
+local Window = OrionLib:MakeWindow({Name = "Secuirty.lua - Trident", HidePremium = true, SaveConfig = true, ConfigFolder = "SecuirtyHouse.lua", IntroEnabled = true, IntroText = "SecuirtyHouse.lua"})
+
+-- Making the TABS --
+local MainTab = Window:MakeTab({
+	Name = "Player",
+	Icon = nil,
+	PremiumOnly = false
 })
 
-local MainTab = Window:CreateTab("Main")
-local MainSection = MainTab:CreateSection("Main Page")
+local AimTab = Window:MakeTab({
+	Name = "Aim",
+	Icon = nil,
+	PremiumOnly = false
+})
 
-local MaliciousTab = Window:CreateTab("Malicious")
-local MaliciousSection = MaliciousTab:CreateSection("Malicious Page")
+local ESPTab = Window:MakeTab({
+	Name = "ESP",
+	Icon = nil,
+	PremiumOnly = false
+})
 
-local SettingsTab = Window:CreateTab("Settings")
-local SettingsSection = SettingsTab:CreateSection("Settings Page")
+local MaliciousTab = Window:MakeTab({
+	Name = "Malicious",
+	Icon = nil,
+	PremiumOnly = false
+})
 
-Rayfield:Notify({
-   Title = "Executed",
-   Content = "You have successfully loaded the script.",
-   Duration = 6.5,
-   Image = 4483362458,
-   Actions = {
-      Ignore = {
-         Name = "W",
-         Callback = function()
-      end
-   },
-},
+local SettingsTab = Window:MakeTab({
+	Name = "Settings",
+	Icon = nil,
+	PremiumOnly = false
 })
 
 
--- Main Area
-local Label = MainTab:CreateLabel("Player")
-local Slider = MainTab:CreateSlider({
-   Name = "WalkSpeed",
-   Range = {16, 100},
-   Increment = 100,
-   Suffix = "Speed",
-   CurrentValue = 0,
-   Flag = "Walkspeedflag1",
-   Callback = function(Value)
-   -- The function that takes place when the slider changes
-   -- The variable (Value) is a number which correlates to the value the slider is currently at
-   end,
+-- Making the Sections --
+local MainSection = MainTab:AddSection({
+	Name = "Player Page"
 })
 
-local Toggle = MainTab:CreateToggle({
-   Name = "Infinite Jump",
-   CurrentValue = false,
-   Flag = "InfTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
+local AimSection = AimTab:AddSection({
+	Name = "Aim Page"
 })
 
-local Toggle = MainTab:CreateToggle({
-   Name = "NoClip",
-   CurrentValue = false,
-   Flag = "NoClipTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
+local ESPSection = ESPTab:AddSection({
+	Name = "ESP Page"
 })
 
-local Label = MainTab:CreateLabel("ESP")
-local Toggle = MainTab:CreateToggle({
-   Name = "Player ESP",
-   CurrentValue = false,
-   Flag = "PlayerTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
+local MaliciousSection = MaliciousTab:AddSection({
+	Name = "Malicious Page"
 })
 
-local Toggle = MainTab:CreateToggle({
-   Name = "ToolCupboard ESP",
-   CurrentValue = false,
-   Flag = "CupboardTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Toggle = MainTab:CreateToggle({
-   Name = "Ore ESP",
-   CurrentValue = false,
-   Flag = "OreTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Toggle = MainTab:CreateToggle({
-   Name = "Location ESP",
-   CurrentValue = false,
-   Flag = "LocationTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Label = MainTab:CreateLabel("AIM")
-local Toggle = MainTab:CreateToggle({
-   Name = "AimBot (RMB)",
-   CurrentValue = false,
-   Flag = "AimbotTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Toggle = MainTab:CreateToggle({
-   Name = "Silent Aim",
-   CurrentValue = false,
-   Flag = "SilentaTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Toggle = MainTab:CreateToggle({
-   Name = "Enabled FOV",
-   CurrentValue = false,
-   Flag = "SAFOVTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Slider = MainTab:CreateSlider({
-   Name = "FOV Size",
-   Range = {10, 30},
-   Increment = 30,
-   Suffix = "Size",
-   CurrentValue = 10,
-   Flag = "FOVsizeflag1",
-   Callback = function(Value)
-   -- The function that takes place when the slider changes
-   -- The variable (Value) is a number which correlates to the value the slider is currently at
-   end,
-})
-
-local Label = MainTab:CreateLabel("Other")
-local Toggle = MainTab:CreateToggle({
-   Name = "Full Bright",
-   CurrentValue = false,
-   Flag = "BrightTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Toggle = MainTab:CreateToggle({
-   Name = "Auto Farm",
-   CurrentValue = false,
-   Flag = "FarmATOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Input = MainTab:CreateInput({
-   Name = "Spectate Player",
-   PlaceholderText = "Players Name",
-   RemoveTextAfterFocusLost = false,
-   Callback = function(Text)
-   -- The function that takes place when the input is changed
-   -- The variable (Text) is a string for the value in the text box
-   end,
-})
-
--- Malicious Area
-local Button = MaliciousTab:CreateButton({
-   Name = "Dupe Tool (Hold out the tool)",
-   Callback = function()
-	
-   end,
-})
-
-local Slider = MaliciousTab:CreateSlider({
-   Name = "How many tools to bring",
-   Range = {1, 20},
-   Increment = 20,
-   Suffix = "Tools",
-   CurrentValue = 1,
-   Flag = "ToolFDflag1",
-   Callback = function(Value)
-   -- The function that takes place when the slider changes
-   -- The variable (Value) is a number which correlates to the value the slider is currently at
-   end,
-})
-
-local Button = MaliciousTab:CreateButton({
-   Name = "Bring Tools (TPS as many tools you put to bring)",
-   Callback = function()
-
-   end,
-})
-
-local Toggle = MaliciousTab:CreateToggle({
-   Name = "Lag Server",
-   CurrentValue = false,
-   Flag = "LagServTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
-})
-
-local Input = MaliciousTab:CreateInput({
-   Name = "Kill Player",
-   PlaceholderText = "Players Name",
-   RemoveTextAfterFocusLost = false,
-   Callback = function(Text)
-   -- The function that takes place when the input is changed
-   -- The variable (Text) is a string for the value in the text box
-   end,
-})
-
-local Toggle = MaliciousTab:CreateToggle({
-   Name = "Auto Kill Player",
-   CurrentValue = false,
-   Flag = "KillPlayerTOGGLE",
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
+OrionLib:MakeNotification({
+	Name = "Executed!",
+	Content = "You have successfully executed the script",
+	Image = "rbxassetid://4483345998",
+	Time = 5
 })
 
 
--- Settings Area
-local Button = SettingsTab:CreateButton({
-   Name = "Destroy UI",
-   Callback = function()
-	Rayfield:Destroy()
-   end,
+-- The Scripts -- 
+
+
+-- MAIN AREA --
+MainTab:AddLabel("Player")
+MainTab:AddSlider({
+	Name = "WalkSpeed",
+	Min = 16,
+	Max = 100,
+	Default = 16,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Speed",
+	Callback = function(Value)
+		print(Value)
+	end    
 })
 
-Rayfield:LoadConfiguration()
+MainTab:AddSlider({
+	Name = "Infinite Jump",
+	Min = 50,
+	Max = 130,
+	Default = 50,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Power",
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+MainTab:AddToggle({
+	Name = "NoClip",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+MainTab:AddToggle({
+	Name = "Full Bright",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+-- ESP AREA --
+
+ESPTab:AddLabel("ESP Area")
+ESPTab:AddToggle({
+	Name = "Player ESP",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+ESPTab:AddToggle({
+	Name = "Location ESP",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+ESPTab:AddToggle({
+	Name = "Ore ESP",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+ESPTab:AddToggle({
+	Name = "ToolCupboard ESP",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+
+AimTab:AddLabel("Aiming")
+AimTab:AddToggle({
+	Name = "AimBot (RMB)",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+AimTab:AddToggle({
+	Name = "Silent Aim",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+AimTab:AddToggle({
+	Name = "Enabled FOV",
+	Default = false,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+AimTab:AddSlider({
+	Name = "FOV",
+	Min = 10,
+	Max = 40,
+	Default = 15,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Size",
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+
+-- Malicious AREA --
+MaliciousTab:AddLabel("Duping")
+MaliciousTab:AddSlider({
+	Name = "Tools",
+	Min = 1,
+	Max = 20,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "How many tools to bring",
+	Callback = function(toolsvalue)
+		getgenv().Tools = toolsvalue
+	end    
+})
+
+MaliciousTab:AddButton({
+	Name = "Bring Tools",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+
+MaliciousTab:AddButton({
+	Name = "Dupe Tool (hold the tool)",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+
+MaliciousTab:AddLabel("Crashing/Lagging")
+MaliciousTab:AddToggle({
+	Name = "Crash Server",
+	Default = false,
+	Callback = function(crashvalue)
+	if crashvalue == true then
+	OrionLib:MakeNotification({
+	Name = "Crashing Started!",
+	Content = "Just sit back and relax, let daddy take care of this ;)",
+	Image = nil,
+	Time = 7
+})
+ -- Main code
+	end
+	if crashvalue == false then
+	OrionLib:MakeNotification({
+	Name = "Crashed Stopped",
+	Content = "HOPEFULLY it stopped",
+	Image = nil,
+	Time = 6
+})
+end
+	end    
+})
+
+MaliciousTab:AddLabel("Kill Area")
+Malicious:AddTextbox({
+	Name = "Player",
+	Default = "Players Name",
+	TextDisappear = false,
+	Callback = function(playername)
+		print(playername)
+	end	  
+})
+
+MaliciousTab:AddToggle({
+	Name = "Spectate Player",
+	Default = false,
+	Callback = function(specplr)
+		print(specplr)
+	end    
+})
+
+MaliciousTab:AddToggle({
+	Name = "Auto Kill",
+	Default = false,
+	Callback = function(autokill)
+		print(autokill)
+	end    
+})
+
+MaliciousTab:AddLabel("Farming Area")
+MaliciousTab:AddToggle({
+	Name = "Auto HIT",
+	Default = false,
+	Callback = function(autohit)
+		if autohit == true then
+	OrionLib:MakeNotification({
+	Name = "AutoHit ON",
+	Content = nil,
+	Image = nil,
+	Time = 5
+})
+ -- Main code here
+end
+	if autohit == false then
+	OrionLib:MakeNotification({
+	Name = "AutoHit OFF",
+	Content = nil,
+	Image = nil,
+	Time = 4
+})
+	end  
+	end
+})
+
+
+-- Settings AREA --
+SettingsTab:AddButton({
+	Name = "Destory UI",
+	Callback = function()
+      		OrionLib:Destroy()
+  	end    
+})
+
+OrionLib:Init()
