@@ -527,7 +527,7 @@ AimTab:AddToggle({
                 FOV = false
             }
         }
-        
+        getgenv().silentaimsettings = SilentAimSettings
         local CurrentCamera = game:GetService("Workspace").CurrentCamera
         local Inset = game:GetService("GuiService"):GetGuiInset().Y
         local RunService = game:GetService("RunService")
