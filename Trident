@@ -618,12 +618,7 @@ AimTab:AddToggle({
 	Name = "Enabled FOV",
 	Default = false,
 	Callback = function(Value)
-		if Value == true then
-            getgenv().silentaimsettings.Settings.Thickness = 3.5
-        else Value = false do
-            getgenv().silentaimsettings.Settings.Thickness = 0
-        end
-end
+		getgenv().silentaimsettings.Settings.FOV = Value
 end
 })
 
