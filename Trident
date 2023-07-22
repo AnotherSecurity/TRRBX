@@ -512,18 +512,9 @@ AimTab:AddToggle({
 	Name = "Silent Aim (Q)",
 	Default = false,
 	Callback = function(Value)
-        getgenv().silentaim = false
-
-        if Value == true then
-            getgenv().silentaim = true
-        else getgenv().silentaim = false
-            Value = false
-        end
-        getgenv.silentaimsettings = Settings
-        if getgenv().silentaim = true then
-		local Settings = {
+        local SilentAimSettings = {
             AimLock = {
-                Enabled = true,
+                Enabled = false,
                 Aimlockkey = "q",
                 Prediction = 0.100340,
                 Aimpart = 'HumanoidRootPart',
@@ -535,7 +526,6 @@ AimTab:AddToggle({
                 Color = Color3.fromRGB(255, 0, 0),
                 FOV = false
             }
-        
         }
         
         local CurrentCamera = game:GetService("Workspace").CurrentCamera
@@ -550,23 +540,22 @@ AimTab:AddToggle({
         local Plr = game.Players.LocalPlayer
         
         Mouse.KeyDown:Connect(function(KeyPressed)
-            if KeyPressed == (Settings.AimLock.Aimlockkey) then
-                if Settings.AimLock.Enabled == true then
-                    Settings.AimLock.Enabled = false
-                    if Settings.AimLock.Notifications == true then
+            if KeyPressed == SilentAimSettings.AimLock.Aimlockkey then
+                SilentAimSettings.AimLock.Enabled = not SilentAimSettings.AimLock.Enabled
+                if SilentAimSettings.AimLock.Enabled then
+                    Plr = FindClosestPlayer()
+                    if SilentAimSettings.AimLock.Notifications then
+                        game.StarterGui:SetCore("SendNotification", {
+                            Title = "Lock",
+                            Text = "Locked:  " .. tostring(Plr.Character.Humanoid.DisplayName)
+                        })
+                    end
+                else
+                    if SilentAimSettings.AimLock.Notifications then
                         Plr = FindClosestPlayer()
                         game.StarterGui:SetCore("SendNotification", {
                             Title = "Lock",
                             Text = "Unlocked"
-                        })
-                    end
-                else
-                    Plr = FindClosestPlayer()
-                    Settings.AimLock.Enabled = true
-                    if Settings.AimLock.Notifications == true then
-                        game.StarterGui:SetCore("SendNotification", {
-                            Title = "Lock",
-                            Text = "Locked:  " .. tostring(Plr.Character.Humanoid.DisplayName)
                         })
                     end
                 end
@@ -578,9 +567,8 @@ AimTab:AddToggle({
             for _, Player in next, game:GetService("Players"):GetPlayers() do
                 if Player ~= LocalPlayer then
                     local Character = Player.Character
-                    if Character and Character.Humanoid.Health > 1 then 
-                        local Position, IsVisibleOnViewPort = CurrentCamera:WorldToViewportPoint(Character.HumanoidRootPart
-                                                                                                     .Position)
+                    if Character and Character:FindFirstChild("Humanoid") and Character.Humanoid.Health > 1 then
+                        local Position, IsVisibleOnViewPort = CurrentCamera:WorldToViewportPoint(Character.HumanoidRootPart.Position)
                         if IsVisibleOnViewPort then
                             local Distance = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Position.X, Position.Y)).Magnitude
                             if Distance < ClosestDistance then
@@ -594,21 +582,20 @@ AimTab:AddToggle({
             return ClosestPlayer, ClosestDistance
         end
         
-        RunService.Heartbeat:connect(function()
-            if Settings.AimLock.Enabled == true then
-                local Vector = CurrentCamera:WorldToViewportPoint(Plr.Character[Settings.AimLock.Aimpart].Position +
-                                                                      (Plr.Character[Settings.AimLock.Aimpart].Velocity *
-                                                                      Settings.AimLock.Prediction))
-                Circle.Position = Vector2.new(Mouse.X, Mouse.Y + Inset)
-                Circle.Visible = Settings.Settings.FOV
-                Circle.Thickness = 1.5
-                Circle.Thickness = 2
-                Circle.Radius = 60
-                Circle.Color = Settings.Settings.Color
-            elseif Settings.AimLock.FOV == true then
-                Circle.Visible = true
+        RunService.Heartbeat:Connect(function()
+            if SilentAimSettings.AimLock.Enabled then
+                local PlrCharacter = Plr.Character
+                if PlrCharacter and PlrCharacter:FindFirstChild(SilentAimSettings.AimLock.Aimpart) then
+                    local Vector = CurrentCamera:WorldToViewportPoint(PlrCharacter[SilentAimSettings.AimLock.Aimpart].Position +
+                        (PlrCharacter[SilentAimSettings.AimLock.Aimpart].Velocity * SilentAimSettings.AimLock.Prediction))
+                    Circle.Position = Vector2.new(Vector.X, Vector.Y + Inset)
+                    Circle.Visible = SilentAimSettings.Settings.FOV
+                    Circle.Thickness = 2
+                    Circle.Radius = 60
+                    Circle.Color = SilentAimSettings.Settings.Color
+                end
             else
-                Circle.Visible = false
+                Circle.Visible = SilentAimSettings.Settings.FOV
             end
         end)
         
@@ -617,29 +604,27 @@ AimTab:AddToggle({
         setreadonly(mt, false)
         mt.__namecall = newcclosure(function(...)
             local args = {...}
-            if Settings.AimLock.Enabled and getnamecallmethod() == "FireServer" and args[2] == "MousePos" then
-                args[3] = Plr.Character[Settings.AimLock.Aimpart].Position +
-                              (Plr.Character[Settings.AimLock.Aimpart].Velocity * Settings.AimLock.Prediction)
-        
+            if SilentAimSettings.AimLock.Enabled and getnamecallmethod() == "FireServer" and args[2] == "MousePos" then
+                args[3] = Plr.Character[SilentAimSettings.AimLock.Aimpart].Position +
+                    (Plr.Character[SilentAimSettings.AimLock.Aimpart].Velocity * SilentAimSettings.AimLock.Prediction)
                 return old(unpack(args))
             end
             return old(...)
         end)
-	end
-else getgenv().silentaim = false then
-    Value = false
-end
+        end
 })
 
 AimTab:AddToggle({
 	Name = "Enabled FOV",
 	Default = false,
 	Callback = function(Value)
-		if Value = true then
+		if Value == true then
             getgenv().silentaimsettings.Settings.Thickness = 3.5
-        else Value = false then
+        else Value = false do
             getgenv().silentaimsettings.Settings.Thickness = 0
-	end    
+        end
+end
+end
 })
 
 AimTab:AddSlider({
