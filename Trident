@@ -172,36 +172,9 @@ local toggle = Settingssection:Toggle("Full Bright", function(bool)
     isFullBright = bool
     while isFullBright do
         wait()
-        game.Lighting.Brightness = 10
-    end
-end)
-
-
-getgenv().ambloop = false
-local function ambientLoop(color)
-    while getgenv().ambloop do
-        wait()
-        game.Lighting.Ambient = color
-    end
-end
-
-local isambient = false
-local toggle = Settingssection:Toggle("Ambient Toggle", function(bool)
-    isambient = bool
-    if isambient then
-        getgenv().ambloop = true
-        local ambientThread = coroutine.create(ambientLoop)
-        coroutine.resume(ambientThread, Settingssection:GetColor("Ambient"))
-    else
-        getgenv().ambloop = false
-    end
-end)
-
-Settingssection:ColorWheel("Ambient", function(color)
-    if getgenv().ambloop then
-        while true do
-            wait()
-            game.Lighting.Ambient = color
-        end
+        game.Lighting.Brightness = 2
+        game.Lighting.Ambient = Color3.new(255/255, 255/255, 255/255)
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogStart = 999999999999999999
     end
 end)
