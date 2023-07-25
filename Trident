@@ -1,735 +1,181 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/cerberus.lua"))()
 
-local Window = OrionLib:MakeWindow({Name = "Secuirty.lua - Trident", HidePremium = true, SaveConfig = true, ConfigFolder = "SecuirtyHouse.lua", IntroEnabled = true, IntroText = "SecuirtyHouse.lua"})
+local window = Library.new("Security.lua - Trident")
+window:LockScreenBoundaries(true)
 
--- Making the TABS --
-local MainTab = Window:MakeTab({
-	Name = "Player",
-	Icon = nil,
-	PremiumOnly = false
-})
+-- Tab Area --
+local Maintab = window:Tab("Main")
+local Settingstab = window:Tab("Settings")
 
-local AimTab = Window:MakeTab({
-	Name = "Aim",
-	Icon = nil,
-	PremiumOnly = false
-})
+-- Section Area -- 
+local Playersection = Maintab:Section("Player Page")
+local Aimsection = Maintab:Section("Aim Page")
+local ESPsection = Maintab:Section("ESP Page")
+local Malicioussection = Maintab:Section("Malicious Page")
 
-local ESPTab = Window:MakeTab({
-	Name = "ESP",
-	Icon = nil,
-	PremiumOnly = false
-})
+local Settingssection = Settingstab:Section("Settings Page")
 
-local MaliciousTab = Window:MakeTab({
-	Name = "Malicious",
-	Icon = nil,
-	PremiumOnly = false
-})
+-- Scripts/Buttons Area --
+-- Player Section --
+local title = Playersection:Title("Local Player")
 
-local SettingsTab = Window:MakeTab({
-	Name = "Settings",
-	Icon = nil,
-	PremiumOnly = false
-})
-
-
--- Making the Sections --
-local MainSection = MainTab:AddSection({
-	Name = "Player Page"
-})
-
-local AimSection = AimTab:AddSection({
-	Name = "Aim Page"
-})
-
-local ESPSection = ESPTab:AddSection({
-	Name = "ESP Page"
-})
-
-local MaliciousSection = MaliciousTab:AddSection({
-	Name = "Malicious Page"
-})
-
-OrionLib:MakeNotification({
-	Name = "Executed!",
-	Content = "You have successfully executed the script",
-	Image = "rbxassetid://4483345998",
-	Time = 5
-})
-
-
--- The Scripts -- 
-
-
--- MAIN AREA --
-MainTab:AddLabel("Player")
-MainTab:AddButton({
-	Name = "CFrame (X)",
-	Callback = function()
-      		repeat
+local label = Playersection:Label("CFrame")
+Playersection:Button("CFrame (X)", function()
+   
+end)
+Playersection:Slider("CFrame Speed", function(val)
+    
+end, 5, 1)
+local label = Playersection:Label("Infinite Jump")
+Playersection:Button("Infinite Jump", function()
+   
+end)
+Playersection:Slider("Jump Height", function(val)
+    
+end, 250, 50)
+local label = Playersection:Label("Other")
+local isNoClip = false
+local toggle = Playersection:Toggle("NoClip", function(bool)
+    isNoClip = bool
+    while isNoClip do
         wait()
-    until game:IsLoaded()
-    local L_134_ = game:service('Players')
-    local L_135_ = L_134_.LocalPlayer
-    repeat
-        wait()
-    until L_135_.Character
-    local L_136_ = game:service('UserInputService')
-    local L_137_ = game:service('RunService')
-    getgenv().Multiplier = 3
-    local L_138_ = true
-    local L_139_
-    L_136_.InputBegan:connect(function(L_140_arg0)
-        if L_140_arg0.KeyCode == Enum.KeyCode.LeftBracket then
-            Multiplier = Multiplier + 0.01
-            print(Multiplier)
-            wait(0.2)
-            while L_136_:IsKeyDown(Enum.KeyCode.LeftBracket) do
-                wait()
-                Multiplier = Multiplier + 0.01
-                print(Multiplier)
-            end
-        end
-        if L_140_arg0.KeyCode == Enum.KeyCode.RightBracket then
-            Multiplier = Multiplier - 0.01
-            print(Multiplier)
-            wait(0.2)
-            while L_136_:IsKeyDown(Enum.KeyCode.RightBracket) do
-                wait()
-                Multiplier = Multiplier - 0.01
-                print(Multiplier)
-            end
-        end
-        if L_140_arg0.KeyCode == Enum.KeyCode.X then
-            L_138_ = not L_138_
-            if L_138_ == true then
-                repeat
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * Multiplier
-                    game:GetService("RunService").Stepped:wait()
-                until L_138_ == false
-            end
-        end
-    end)
-db = false
-  	end    
-})
 
-
-MainTab:AddSlider({
-	Name = "CFrame Speed",
-	Min = 1,
-	Max = 3,
-	Default = 1,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "Speed",
-	Callback = function(Value)
-		getgenv().Multiplier = value
-	end    
-})
-
-MainTab:AddButton({
-	Name = "Infinite Jump",
-	Callback = function()
-      		local Player = game:GetService'Players'.LocalPlayer;
-local UIS = game:GetService'UserInputService';
-
-_G.JumpHeight = 50
-
-function Action(Object, Function) if Object ~= nil then Function(Object); end end
- 
-UIS.InputBegan:connect(function(UserInput)
-    if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then
-        Action(Player.Character.Humanoid, function(self)
-            if self:GetState() == Enum.HumanoidStateType.Jumping or self:GetState() == Enum.HumanoidStateType.Freefall then
-                Action(self.Parent.HumanoidRootPart, function(self)
-                    self.Velocity = Vector3.new(0, _G.JumpHeight, 0);
-                end)
-            end
-        end)
     end
 end)
-  	end    
-})
 
-MainTab:AddSlider({
-	Name = "Jump Height",
-	Min = 50,
-	Max = 250,
-	Default = 50,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "Power",
-	Callback = function(Value)
-		_G.JumpHeight = value
-	end    
-})
+-- Aim Section --
+local title = Aimsection:Title("Aiming")
 
-MainTab:AddToggle({
-	Name = "NoClip",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
+local isLock = false
+local toggle = Aimsection:Toggle("Lock (RMB)", function(bool)
+    isLock = bool
+    while isLock do
+        wait()
 
-MainTab:AddToggle({
-	Name = "Full Bright",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
+    end
+end)
 
--- ESP AREA --
+local isSilentAim = false
+local toggle = Aimsection:Toggle("Silent Aim", function(bool)
+    isSilentAim = bool
+    while isSilentAim do
+        wait()
 
-ESPTab:AddLabel("ESP Area")
-ESPTab:AddToggle({
-	Name = "Player ESP",
-	Default = false,
-	Callback = function(Value)
-        if Value == false then 
-            getgenv().esptoggle = false
-        elseif Value == true then
-		if not game:IsLoaded() then
-            game.Loaded:Wait()
-        end
-        getgenv().esptoggle = true
-        getgenv().esp = esptoggle
-        local plrs = game["Players"]
-        local rs = game["RunService"]
-        local Players = game:GetService("Players")
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        local UserInputService = game:GetService("UserInputService")
-        local Lighting = game:GetService("Lighting")
-        local Teams = game:GetService("Teams")
-        local RunService = game:GetService("RunService")
-        local TeleportService = game:GetService("TeleportService")
-        
-        local LocalPlayer = Players.LocalPlayer
-        local Mouse = LocalPlayer:GetMouse()
-        local CurrentCamera = workspace.CurrentCamera
-        local plr = plrs.LocalPlayer
-        local mouse = plr:GetMouse()
-        local camera = workspace.CurrentCamera
-        local worldToViewportPoint = camera.worldToViewportPoint
-        local cc = Instance.new("ColorCorrectionEffect", game.Lighting)
-        local blur = Instance.new("BlurEffect", game.Lighting)
-        local sun = Instance.new("SunRaysEffect", game.Lighting)
-        blur.Size = 0
-        sun.Intensity = 0
-        
-        --[Optimisation Variables]
-        
-        local Drawingnew = Drawing.new
-        local Color3fromRGB = Color3.fromRGB
-        local Vector3new = Vector3.new
-        local Vector2new = Vector2.new
-        local mathfloor = math.floor
-        local mathceil = math.ceil
-        
-        --[Setup Table]
-        
-        -- esp.enabled
-        
-        local esp = {
-            players = {},
-            enabled = false,
-            teamcheck = true,
-            fontsize = 17,
-            font = 2,
-            settings = {
-                name = {
-                    enabled = true,
-                    outline = true,
-                    color = Color3fromRGB(0, 0, 0),
-                    outlineColor = Color3fromRGB(255, 255, 255)
-                },
-                box = {
-                    enabled = true,
-                    outline = true,
-                    color = Color3fromRGB(0, 0, 0),
-                    outlineColor = Color3fromRGB(0, 0, 0)
-                },
-                healthbar = {
-                    enabled = true,
-                    outline = true,
-                    color = Color3fromRGB(0, 0, 0),
-                    outlineColor = Color3fromRGB(0, 255, 0)
-                },
-                healthtext = {
-                    enabled = true,
-                    outline = true,
-                    color = Color3fromRGB(0, 0, 0),
-                    outlineColor = Color3fromRGB(105, 105, 105)
-                },
-                distance = {
-                    enabled = true,
-                    outline = true,
-                    color = Color3fromRGB(0, 0, 0),
-                    outlineColor = Color3fromRGB(255, 255, 255)
-                }
-            }
-        }
-        
-        esp.NewDrawing = function(type, properties)
-            local newDrawing = Drawingnew(type)
-        
-            for i, v in next, properties or {} do
-                newDrawing[i] = v
-            end
-        
-            return newDrawing
-        end
-        
-        esp.NewPlayer = function(v)
-            esp.players[v] = {
-                name = esp.NewDrawing(
-                    "Text",
-                    {Color = Color3fromRGB(94, 0, 255), Outline = true, Center = true, Size = 13, Font = 0}
-                ),
-                boxOutline = esp.NewDrawing("Square", {Color = Color3fromRGB(0, 0, 0), Thickness = 3}),
-                box = esp.NewDrawing("Square", {Color = Color3fromRGB(108, 11, 204), Thickness = 1}),
-                healthBarOutline = esp.NewDrawing("Line", {Color = Color3fromRGB(0, 0, 0), Thickness = 3}),
-                healthBar = esp.NewDrawing("Line", {Color = Color3fromRGB(255, 255, 255), Thickness = 1}),
-                healthText = esp.NewDrawing(
-                    "Text",
-                    {Color = Color3fromRGB(94, 0, 255), Outline = true, Center = true, Size = 13, Font = 0}
-                ),
-                distance = esp.NewDrawing(
-                    "Text",
-                    {Color = Color3fromRGB(94, 0, 255), Outline = true, Center = true, Size = 13, Font = 0}
-                )
-            }
-        end
-        
-        for _, v in ipairs(plrs:GetPlayers()) do
-            esp.NewPlayer(v)
-        end
-        
-        plrs.PlayerAdded:Connect(
-            function(v)
-                esp.NewPlayer(v)
-            end
-        )
-        
-        plrs.PlayerRemoving:Connect(
-            function(v)
-                for i, v in pairs(esp.players[v]) do
-                    v:Remove()
-                end
-                esp.players[v] = nil
-            end
-        )
-        
-        local mainLoop =
-            rs.RenderStepped:Connect(
-            function()
-                for i, v in pairs(esp.players) do
-                    if
-                        i ~= plr and i.Character and i.Character:FindFirstChild("Humanoid") and
-                            i.Character:FindFirstChild("HumanoidRootPart") and
-                            i.Character:FindFirstChild("Head")
-                     then
-                        local hum = i.Character.Humanoid
-                        local hrp = i.Character.HumanoidRootPart
-                        local head = i.Character.Head
-        
-                        local Vector, onScreen = camera:WorldToViewportPoint(i.Character.HumanoidRootPart.Position)
-        
-                        local Size =
-                            (camera:WorldToViewportPoint(hrp.Position - Vector3new(0, 3, 0)).Y -
-                            camera:WorldToViewportPoint(hrp.Position + Vector3new(0, 2.6, 0)).Y) /
-                            2
-                        local BoxSize = Vector2new(mathfloor(Size * 1.5), mathfloor(Size * 1.9))
-                        local BoxPos = Vector2new(mathfloor(Vector.X - Size * 1.5 / 2), mathfloor(Vector.Y - Size * 1.6 / 2))
-        
-                        local BottomOffset = BoxSize.Y + BoxPos.Y + 1
-        
-                        if onScreen and esp.enabled then
-                            if esp.settings.name.enabled then
-                                v.name.Position = Vector2new(BoxSize.X / 2 + BoxPos.X, BoxPos.Y - 16)
-                                v.name.Outline = esp.settings.name.outline
-                                v.name.Text = tostring(i)
-                                v.name.Color = esp.settings.name.color
-                                v.name.OutlineColor = esp.settings.name.outlineColor
-                                v.name.Font = esp.font
-                                v.name.Size = esp.fontsize
-        
-                                v.name.Visible = true
-                            else
-                                v.name.Visible = false
-                            end
-        
-                            if
-                                esp.settings.distance.enabled and plr.Character and
-                                    plr.Character:FindFirstChild("HumanoidRootPart")
-                             then
-                                v.distance.Position = Vector2new(BoxSize.X / 2 + BoxPos.X, BottomOffset)
-                                v.distance.Outline = esp.settings.distance.outline
-                                v.distance.Text =
-                                    "[" .. mathfloor((hrp.Position - plr.Character.HumanoidRootPart.Position).Magnitude) .. "m]"
-                                v.distance.Color = esp.settings.distance.color
-                                v.distance.OutlineColor = esp.settings.distance.outlineColor
-                                BottomOffset = BottomOffset + 15
-        
-                                v.distance.Font = esp.font
-                                v.distance.Size = esp.fontsize
-        
-                                v.distance.Visible = true
-                            else
-                                v.distance.Visible = false
-                            end
-        
-                            if esp.settings.box.enabled then
-                                v.boxOutline.Size = BoxSize
-                                v.boxOutline.Position = BoxPos
-                                v.boxOutline.Visible = esp.settings.box.outline
-                                v.boxOutline.Color = esp.settings.box.outlineColor
-        
-                                v.box.Size = BoxSize
-                                v.box.Position = BoxPos
-                                v.box.Color = esp.settings.box.color
-                                v.box.Visible = true
-                            else
-                                v.boxOutline.Visible = false
-                                v.box.Visible = false
-                            end
-        
-                            if esp.settings.healthbar.enabled then
-                                v.healthBar.From = Vector2new((BoxPos.X - 5), BoxPos.Y + BoxSize.Y)
-                                v.healthBar.To =
-                                    Vector2new(
-                                    v.healthBar.From.X,
-                                    v.healthBar.From.Y - (hum.Health / hum.MaxHealth) * BoxSize.Y
-                                )
-                                v.healthBar.Color = esp.settings.healthbar.color
-                                v.healthBar.Visible = true
-        
-                                v.healthBarOutline.From = Vector2new(v.healthBar.From.X, BoxPos.Y + BoxSize.Y + 1)
-                                v.healthBarOutline.To = Vector2new(v.healthBar.From.X, (v.healthBar.From.Y - 1 * BoxSize.Y) - 1)
-                                v.healthBarOutline.Color = esp.settings.healthbar.outlineColor
-                                v.healthBarOutline.Visible = esp.settings.healthbar.outline
-                            else
-                                v.healthBarOutline.Visible = false
-                                v.healthBar.Visible = false
-                            end
-        
-                            if esp.settings.healthtext.enabled then
-                                v.healthText.Text = tostring(mathfloor((hum.Health / hum.MaxHealth) * 100 + 0.5))
-                                v.healthText.Position = Vector2new((BoxPos.X - 20), (BoxPos.Y + BoxSize.Y - 1 * BoxSize.Y) - 1)
-                                v.healthText.Color = esp.settings.healthtext.color
-                                v.healthText.OutlineColor = esp.settings.healthtext.outlineColor
-                                v.healthText.Outline = esp.settings.healthtext.outline
-        
-                                v.healthText.Font = esp.font
-                                v.healthText.Size = esp.fontsize
-        
-                                v.healthText.Visible = true
-                            else
-                                v.healthText.Visible = false
-                            end
-        
-                            if esp.teamcheck then
-                                if v.TeamColor ~= plr.TeamColor then
-                                    v.name.Visible = esp.settings.name.enabled
-                                    v.box.Visible = esp.settings.box.enabled
-                                    v.healthBar.Visible = esp.settings.healthbar.enabled
-                                    v.healthText.Visible = esp.settings.healthtext.enabled
-                                    v.distance.Visible = esp.settings.distance.enabled
-                                else
-                                    v.name.Visible = false
-                                    v.boxOutline.Visible = false
-                                    v.box.Visible = false
-                                    v.healthBarOutline.Visible = false
-                                    v.healthBar.Visible = false
-                                    v.healthText.Visible = false
-                                    v.distance.Visible = false
-                                end
-                            end
-                        else
-                            v.name.Visible = false
-                            v.boxOutline.Visible = false
-                            v.box.Visible = false
-                            v.healthBarOutline.Visible = false
-                            v.healthBar.Visible = false
-                            v.healthText.Visible = false
-                            v.distance.Visible = false
-                        end
-                    else
-                        v.name.Visible = false
-                        v.boxOutline.Visible = false
-                        v.box.Visible = false
-                        v.healthBarOutline.Visible = false
-                        v.healthBar.Visible = false
-                        v.healthText.Visible = false
-                        v.distance.Visible = false
-                    end
-                end
-            end
-        )
-        
-        end
-	end    
-})
+    end
+end)
 
-ESPTab:AddToggle({
-	Name = "Location ESP",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
+local isFOV = false
+local toggle = Aimsection:Toggle("Enabled FOV", function(bool)
+    isFOV = bool
+    while isFOV do
+        wait()
 
-ESPTab:AddToggle({
-	Name = "Ore ESP",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
+    end
+end)
 
-ESPTab:AddToggle({
-	Name = "ToolCupboard ESP",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
+Aimsection:Slider("FOV Size", function(val)
+    
+end, 10, 5)
 
+-- ESP Section --
+local title = ESPsection:Title("Esping")
 
-AimTab:AddLabel("Aiming")
-AimTab:AddToggle({
-	Name = "AimBot (RMB)",
-	Default = false,
-	Callback = function(Value)
-		print(Value)
-	end    
-})
-
-AimTab:AddToggle({
-	Name = "Silent Aim (Q)",
-	Default = false,
-	Callback = function(Value)
-        local SilentAimSettings = {
-            AimLock = {
-                Enabled = false,
-                Aimlockkey = "q",
-                Prediction = 0.100340,
-                Aimpart = 'HumanoidRootPart',
-                Notifications = true
-            },
-            Settings = {
-                Thickness = 3.5,
-                Transparency = 1,
-                Color = Color3.fromRGB(255, 0, 0),
-                FOV = false
-            }
-        }
-        getgenv().silentaimsettings = SilentAimSettings
-        local CurrentCamera = game:GetService("Workspace").CurrentCamera
-        local Inset = game:GetService("GuiService"):GetGuiInset().Y
-        local RunService = game:GetService("RunService")
+local isPlrESP = false
+local toggle = ESPsection:Toggle("Player ESP", function(bool)
+    isPlrESP = bool
+    while isPlrESP do
+        wait()
         
-        local Mouse = game.Players.LocalPlayer:GetMouse()
-        local LocalPlayer = game.Players.LocalPlayer
+    end
+end)
+
+local iscupboardESP = false
+local toggle = ESPsection:Toggle("ToolCupboard ESP", function(bool)
+    iscupboardESP = bool
+    while iscupboardESP do
+        wait()
         
-        local Circle = Drawing.new("Circle")
+    end
+end)
+
+local isoreESP = false
+local toggle = ESPsection:Toggle("Ore ESP", function(bool)
+    isoreESP = bool
+    while isoreESP do
+        wait()
         
-        local Plr = game.Players.LocalPlayer
+    end
+end)
+
+-- Malicious Section --
+local title = Malicioussection:Title("Devious")
+
+local label = Malicioussection:Label("Duping")
+Malicioussection:Slider("How many tools to bring", function(val)
+    
+end, 10, 1)
+
+Malicioussection:Button("Bring Tools", function()
+   
+end)
+
+Malicioussection:Button("Dupe (Hold the Tool)", function()
+   
+end)
+
+local label = Malicioussection:Label("Kill Area")
+Malicioussection:TextBox("Players Name", function(txt)
+   
+end)
+
+local isspecate = false
+local toggle = Malicioussection:Toggle("Spectate Player", function(bool)
+    isspecate = bool
+    while isspecate do
+        wait()
         
-        Mouse.KeyDown:Connect(function(KeyPressed)
-            if KeyPressed == SilentAimSettings.AimLock.Aimlockkey then
-                SilentAimSettings.AimLock.Enabled = not SilentAimSettings.AimLock.Enabled
-                if SilentAimSettings.AimLock.Enabled then
-                    Plr = FindClosestPlayer()
-                    if SilentAimSettings.AimLock.Notifications then
-                        game.StarterGui:SetCore("SendNotification", {
-                            Title = "Lock",
-                            Text = "Locked:  " .. tostring(Plr.Character.Humanoid.DisplayName)
-                        })
-                    end
-                else
-                    if SilentAimSettings.AimLock.Notifications then
-                        Plr = FindClosestPlayer()
-                        game.StarterGui:SetCore("SendNotification", {
-                            Title = "Lock",
-                            Text = "Unlocked"
-                        })
-                    end
-                end
-            end
-        end)
+    end
+end)
+
+local iskillplr = false
+local toggle = Malicioussection:Toggle("Kill Player", function(bool)
+    iskillplr = bool
+    while iskillplr do
+        wait()
         
-        function FindClosestPlayer()
-            local ClosestDistance, ClosestPlayer = math.huge, nil;
-            for _, Player in next, game:GetService("Players"):GetPlayers() do
-                if Player ~= LocalPlayer then
-                    local Character = Player.Character
-                    if Character and Character:FindFirstChild("Humanoid") and Character.Humanoid.Health > 1 then
-                        local Position, IsVisibleOnViewPort = CurrentCamera:WorldToViewportPoint(Character.HumanoidRootPart.Position)
-                        if IsVisibleOnViewPort then
-                            local Distance = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Position.X, Position.Y)).Magnitude
-                            if Distance < ClosestDistance then
-                                ClosestPlayer = Player
-                                ClosestDistance = Distance
-                            end
-                        end
-                    end
-                end
-            end
-            return ClosestPlayer, ClosestDistance
-        end
+    end
+end)
+
+local label = Malicioussection:Label("Crashing/Lagging")
+local iscrashing = false
+local toggle = Malicioussection:Toggle("Crash Server", function(bool)
+    iscrashing = bool
+    while iscrashing do
+        wait()
         
-        RunService.Heartbeat:Connect(function()
-            if SilentAimSettings.AimLock.Enabled then
-                local PlrCharacter = Plr.Character
-                if PlrCharacter and PlrCharacter:FindFirstChild(SilentAimSettings.AimLock.Aimpart) then
-                    local Vector = CurrentCamera:WorldToViewportPoint(PlrCharacter[SilentAimSettings.AimLock.Aimpart].Position +
-                        (PlrCharacter[SilentAimSettings.AimLock.Aimpart].Velocity * SilentAimSettings.AimLock.Prediction))
-                    Circle.Position = Vector2.new(Vector.X, Vector.Y + Inset)
-                    Circle.Visible = SilentAimSettings.Settings.FOV
-                    Circle.Thickness = 2
-                    Circle.Radius = 60
-                    Circle.Color = SilentAimSettings.Settings.Color
-                end
-            else
-                Circle.Visible = SilentAimSettings.Settings.FOV
-            end
-        end)
+    end
+end)
+
+local islagging = false
+local toggle = Malicioussection:Toggle("Lag Server (Next Update)", function(bool)
+    islagging = bool
+    while islagging do
+        wait()
         
-        local mt = getrawmetatable(game)
-        local old = mt.__namecall
-        setreadonly(mt, false)
-        mt.__namecall = newcclosure(function(...)
-            local args = {...}
-            if SilentAimSettings.AimLock.Enabled and getnamecallmethod() == "FireServer" and args[2] == "MousePos" then
-                args[3] = Plr.Character[SilentAimSettings.AimLock.Aimpart].Position +
-                    (Plr.Character[SilentAimSettings.AimLock.Aimpart].Velocity * SilentAimSettings.AimLock.Prediction)
-                return old(unpack(args))
-            end
-            return old(...)
-        end)
-        end
-})
+    end
+end)
 
-AimTab:AddToggle({
-	Name = "Enabled FOV",
-	Default = false,
-	Callback = function(Value)
-		getgenv().silentaimsettings.Settings.FOV = Value
-end
-})
+-- Settings Section --
+local title = Settingssection:Title("Game Settings")
+local isFullBright = false
+local toggle = Settingssection:Toggle("Full Bright", function(bool)
+    isFullBright = bool
+    while isFullBright do
+        wait()
+        game.Lighting.Brightness = 2
+    end
+end)
 
-AimTab:AddSlider({
-	Name = "FOV",
-	Min = 1,
-	Max = 4,
-	Default = 3,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "Size",
-	Callback = function(Value)
-		getgenv().silentaimsettings.Settings.Thickness = Value
-	end    
-})
-
--- Malicious AREA --
-MaliciousTab:AddLabel("Duping")
-MaliciousTab:AddSlider({
-	Name = "Tools",
-	Min = 1,
-	Max = 20,
-	Default = 1,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "How many tools to bring",
-	Callback = function(toolsvalue)
-		getgenv().Tools = toolsvalue
-	end    
-})
-
-MaliciousTab:AddButton({
-	Name = "Bring Tools",
-	Callback = function()
-      		print("button pressed")
-  	end    
-})
-
-MaliciousTab:AddButton({
-	Name = "Dupe Tool (hold the tool)",
-	Callback = function()
-      		print("button pressed")
-  	end    
-})
-
-MaliciousTab:AddLabel("Crashing/Lagging")
-MaliciousTab:AddToggle({
-	Name = "Crash Server",
-	Default = false,
-	Callback = function(crashvalue)
-		
-	end    
-})
-
-MaliciousTab:AddLabel("Kill Area")
-MaliciousTab:AddTextbox({
-	Name = "Player",
-	Default = "Players Name",
-	TextDisappear = false,
-	Callback = function(playername)
-		getgenv().plrname = playername
-	end	  
-})
-
-MaliciousTab:AddToggle({
-	Name = "Spectate Player",
-	Default = false,
-	Callback = function(specplr)
-		print(specplr)
-	end    
-})
-
-MaliciousTab:AddToggle({
-	Name = "Auto Kill",
-	Default = false,
-	Callback = function(autokill)
-		getgenv().target = true
-	game:GetService("RunService").heartbeat:Connect(function()
-		if getgenv().target == true then 
-		local abc = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
-		game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,-1000,0)
-		game:GetService("RunService").RenderStepped:Wait()
-		game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = abc
-		end
-	end)
-	game.Players.LocalPlayer.Character.Humanoid.HipHeight = 1.6
-	wait(0.5)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[getgenv().plrname].Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
-	wait(0.3)
-	game.Players.LocalPlayer.Character.Humanoid.HipHeight = 2
-	getgenv().target = false
-	end    
-})
-
-MaliciousTab:AddLabel("Farming Area")
-MaliciousTab:AddToggle({
-	Name = "Auto HIT",
-	Default = false,
-	Callback = function(autohit)
-	    
-	end
-})
-
-
--- Settings AREA --
-SettingsTab:AddButton({
-	Name = "Destory UI",
-	Callback = function()
-		wait(1)
-      		OrionLib:Destroy()
-  	end    
-})
-
-OrionLib:Init()
+Settingssection:ColorWheel("Ambient", function(color)
+        game.Lighting.Ambient = color
+end)
