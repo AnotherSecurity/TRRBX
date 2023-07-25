@@ -21,27 +21,59 @@ local title = Playersection:Title("Local Player")
 
 local label = Playersection:Label("CFrame")
 Playersection:Button("CFrame (X)", function()
-   
+
 end)
 Playersection:Slider("CFrame Speed", function(val)
     
 end, 5, 1)
 local label = Playersection:Label("Infinite Jump")
 Playersection:Button("Infinite Jump", function()
-   
+
 end)
 Playersection:Slider("Jump Height", function(val)
     
 end, 250, 50)
 local label = Playersection:Label("Other")
-local isNoClip = false
-local toggle = Playersection:Toggle("NoClip", function(bool)
-    isNoClip = bool
-    while isNoClip do
-        wait()
 
+local isNoClip = false
+
+local toggle
+toggle = Playersection:Toggle("NoClip (Real Buggy)", function(bool)
+    isNoClip = bool
+
+    if isNoClip then
+        for _, model in ipairs(game.Workspace:GetDescendants()) do
+            if model:IsA("Model") and model.Name == "Model" then
+                local hitBox = model:FindFirstChild("Hitbox")
+                if hitBox then
+                    for _, part in ipairs(model:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = 0.6
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end
+        end
+    else
+        for _, model in ipairs(game.Workspace:GetDescendants()) do
+            if model:IsA("Model") and model.Name == "Model" then
+                local hitBox = model:FindFirstChild("Hitbox")
+                if hitBox then
+                    for _, part in ipairs(model:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = 0
+                            part.CanCollide = true
+                        end
+                    end
+                end
+            end
+        end
     end
 end)
+
+
+
 
 -- Aim Section --
 local title = Aimsection:Title("Aiming")
@@ -80,32 +112,292 @@ end, 10, 5)
 -- ESP Section --
 local title = ESPsection:Title("Esping")
 
+local isPlrESPbox = false
+local highlightTable = {}
+
+local function createHighlight(model)
+    local esp = Instance.new("BoxHandleAdornment")
+    esp.Name = "ESPBox"
+    esp.Size = Vector3.new(2, 2, 2)
+    esp.Adornee = model
+    esp.AlwaysOnTop = true
+    esp.ZIndex = 5
+    esp.Transparency = 0.5
+    esp.Color3 = Color3.new(255,255,255)
+    esp.Parent = model
+    highlightTable[model] = esp
+end
+
+local function destroyHighlight(model)
+    local esp = highlightTable[model]
+    if esp then
+        esp:Destroy()
+        highlightTable[model] = nil
+    end
+end
+
+local toggle
+toggle = ESPsection:Toggle("Player ESPv1", function(bool)
+    isPlrESPbox = bool
+
+    if not isPlrESPbox then
+        for model, _ in pairs(highlightTable) do
+            destroyHighlight(model)
+        end
+    end
+end)
+
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(function()
+    if isPlrESPbox then
+        for _, model in ipairs(game.Workspace:GetChildren()) do
+            if model:IsA("Model") and model:FindFirstChild("Armor") then
+                local esp = highlightTable[model]
+                if not esp then
+                    createHighlight(model)
+                end
+            else
+                destroyHighlight(model)
+            end
+        end
+    end
+end)
+
 local isPlrESP = false
-local toggle = ESPsection:Toggle("Player ESP", function(bool)
+local highlightTablev1 = {}
+
+local function createHighlight(model)
+    local esp = Instance.new("Highlight")
+    esp.Name = "ESP"
+    esp.FillTransparency = 1
+    esp.FillColor = Color3.new(1, 0.666667, 0)
+    esp.OutlineColor = Color3.new(255, 255, 255)
+    esp.OutlineTransparency = 0
+    esp.Parent = model
+    highlightTablev1[model] = esp
+end
+
+local function destroyHighlight(model)
+    local esp = highlightTablev1[model]
+    if esp then
+        esp:Destroy()
+        highlightTablev1[model] = nil
+    end
+end
+
+local toggle
+toggle = ESPsection:Toggle("Player ESPv2", function(bool)
     isPlrESP = bool
-    while isPlrESP do
-        wait()
-        
+
+    if not isPlrESP then
+        for model, _ in pairs(highlightTablev1) do
+            destroyHighlight(model)
+        end
     end
 end)
 
-local iscupboardESP = false
-local toggle = ESPsection:Toggle("ToolCupboard ESP", function(bool)
-    iscupboardESP = bool
-    while iscupboardESP do
-        wait()
-        
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(function()
+    if isPlrESP then
+        for _, model in ipairs(game.Workspace:GetChildren()) do
+            if model:IsA("Model") and model:FindFirstChild("Armor") then
+                local esp = highlightTablev1[model]
+                if not esp then
+                    createHighlight(model)
+                end
+            else
+                destroyHighlight(model)
+            end
+        end
     end
 end)
 
-local isoreESP = false
-local toggle = ESPsection:Toggle("Ore ESP", function(bool)
-    isoreESP = bool
-    while isoreESP do
-        wait()
-        
+local iscupbaordenabled = false
+local highlightTablev3 = {}
+
+local function createHighlight(model)
+    local esp = Instance.new("Highlight")
+    esp.Name = "ESP"
+    esp.FillTransparency = 1
+    esp.FillColor = Color3.new(1, 0.666667, 0)
+    esp.OutlineColor = Color3.new(255, 255, 255)
+    esp.OutlineTransparency = 0
+    esp.Parent = model
+    highlightTablev3[model] = esp
+end
+
+local function destroyHighlight(model)
+    local esp = highlightTablev3[model]
+    if esp then
+        esp:Destroy()
+        highlightTablev3[model] = nil
+    end
+end
+
+local toggle
+toggle = ESPsection:Toggle("ToolCupboard ESP", function(bool)
+    iscupbaordenabled = bool
+
+    if not iscupbaordenabled then
+        for model, _ in pairs(highlightTablev3) do
+            destroyHighlight(model)
+        end
     end
 end)
+
+local function hasWhisperSound(bodyPart)
+    if bodyPart:IsA("BasePart") and bodyPart:FindFirstChild("Whisper") and bodyPart:FindFirstChild("Whisper"):IsA("Sound") then
+        return true
+    end
+    return false
+end
+
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(function()
+    if iscupbaordenabled then
+        for _, model in ipairs(game.Workspace:GetChildren()) do
+            local bodyPart = model:FindFirstChild("Body")
+            if model:IsA("Model") and bodyPart and hasWhisperSound(bodyPart) then
+                local esp = highlightTablev3[model]
+                if not esp then
+                    createHighlight(model)
+                end
+            else
+                destroyHighlight(model)
+            end
+        end
+    end
+end)
+
+local ironoreesp = false
+local highlightTablev5 = {}
+
+local function createHighlight(model)
+    local esp = Instance.new("Highlight")
+    esp.Name = "ESP"
+    esp.FillTransparency = 0.3
+    esp.FillColor = Color3.new(199/255, 172/255, 120/255)
+    esp.OutlineColor = Color3.new(255, 255, 255)
+    esp.OutlineTransparency = 0
+    esp.Parent = model
+    highlightTablev5[model] = esp
+end
+
+local function destroyHighlight(model)
+    local esp = highlightTablev5[model]
+    if esp then
+        esp:Destroy()
+        highlightTablev5[model] = nil
+    end
+end
+
+local toggle
+toggle = ESPsection:Toggle("IronOre ESP", function(bool)
+    ironoreesp = bool
+
+    if not ironoreesp then
+        for model, _ in pairs(highlightTablev5) do
+            destroyHighlight(model)
+        end
+    end
+end)
+
+local function hasBrownPart(model)
+    for _, part in ipairs(model:GetDescendants()) do
+        if part:IsA("BasePart") and part.Color == Color3.fromRGB(199, 172, 120) then
+            return true
+        end
+    end
+    return false
+end
+
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(function()
+    if ironoreesp then
+        for _, model in ipairs(game.Workspace:GetChildren()) do
+            if model:IsA("Model") and hasBrownPart(model) then
+                local esp = highlightTablev5[model]
+                if not esp then
+                    createHighlight(model)
+                end
+            else
+                destroyHighlight(model)
+            end
+        end
+    end
+end)
+
+local niteroreesp = false
+local highlightTablev6 = {}
+
+local function createHighlight(model)
+    local esp = Instance.new("BoxHandleAdornment")
+    esp.Name = "ESPBox"
+    esp.Size = Vector3.new(2, 2, 2)
+    esp.Adornee = model
+    esp.AlwaysOnTop = true
+    esp.ZIndex = 5
+    esp.Transparency = 0
+    esp.Color3 = Color3.new(255,255,255)
+    esp.Parent = model
+    highlightTablev6[model] = esp
+end
+
+local function destroyHighlight(model)
+    local esp = highlightTablev6[model]
+    if esp then
+        esp:Destroy()
+        highlightTablev6[model] = nil
+    end
+end
+
+local toggle
+toggle = ESPsection:Toggle("NiterousOre ESP", function(bool)
+    niteroreesp = bool
+
+    if not niteroreesp then
+        for model, _ in pairs(highlightTablev6) do
+            destroyHighlight(model)
+        end
+    end
+end)
+
+local function hasBrownPart(model)
+    for _, part in ipairs(model:GetDescendants()) do
+        if part:IsA("BasePart") and part.Color == Color3.fromRGB(248, 248, 248) then
+            return true
+        end
+    end
+    return false
+end
+
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(function()
+    if niteroreesp then
+        for _, model in ipairs(game.Workspace:GetChildren()) do
+            if model:IsA("Model") then
+                local esp = highlightTablev6[model]
+                if hasBrownPart(model) then
+                    if not esp then
+                        createHighlight(model)
+                    end
+                else
+                    destroyHighlight(model)
+                end
+            else
+                destroyHighlight(model)
+            end
+        end
+    end
+end)
+
+
+
 
 -- Malicious Section --
 local title = Malicioussection:Title("Devious")
