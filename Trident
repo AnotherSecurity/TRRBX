@@ -4,91 +4,186 @@ local window = Library.new("Security.lua - Trident")
 window:LockScreenBoundaries(true)
 
 -- Tab Area --
-local Maintab = window:Tab("Main")
+local Localplrtab = window:Tab("Local Player")
+local Combattab = window:Tab("Combat")
+local ESPtab = window:Tab("ESP")
+local Malicioustab = window:Tab("Malicious")
 local Settingstab = window:Tab("Settings")
 
 -- Section Area -- 
-local Playersection = Maintab:Section("Player Page")
-local Aimsection = Maintab:Section("Aim Page")
-local ESPsection = Maintab:Section("ESP Page")
-local Malicioussection = Maintab:Section("Malicious Page")
 
-local Settingssection = Settingstab:Section("Settings Page")
+-- Local Player --
+local Speedsection = Localplrtab:Section("Speed")
+local Visualssection = Localplrtab:Section("Visuals")
+ -- Combat --
+local Silentaimsection = Combattab:Section("Silent Aim")
+local weaponmodsection = Combattab:Section("Weapon Modification")
+local headtorsosection = Combattab:Section("Head/Torso Hitbox")
+local aurasection = Combattab:Section("Aura")
+
+-- ESP --
+local Plrsection = ESPtab:Section("Player ESP")
+local Objectsection = ESPtab:Section("Object ESP")
+local OREsection = ESPtab:Section("Ore ESP")
+
+-- Malicious --
+local Malicioussection = Malicioustab:Section("")
+
+-- Settings --
+local Settingssection = Settingstab:Section("World Settings")
 
 -- Scripts/Buttons Area --
 -- Player Section --
-local title = Playersection:Title("Local Player")
-
-local label = Playersection:Label("CFrame")
-Playersection:Button("CFrame (X)", function()
+local title = Speedsection:Title("CFrame")
+Speedsection:Button("CFrame (X)", function()
 
 end)
-Playersection:Slider("CFrame Speed", function(val)
+Speedsection:Slider("CFrame Speed", function(val)
     
 end, 5, 1)
-local label = Playersection:Label("Infinite Jump")
-Playersection:Button("Infinite Jump", function()
+local title = Speedsection:Title("Infinite Jump")
+Speedsection:Button("Infinite Jump", function()
 
 end)
-Playersection:Slider("Jump Height", function(val)
+Speedsection:Slider("Jump Height", function(val)
     
 end, 250, 50)
-local label = Playersection:Label("Other")
+
 
 local isNoClip = false
+local recheckingInterval = 5
+local partsToCheck = {"Hitbox", "Enclosure", "Wall"}
 
-local toggle
-toggle = Playersection:Toggle("NoClip (Real Buggy)", function(bool)
-    isNoClip = bool
+local originalProperties = {}
 
+local function updateParts()
     if isNoClip then
         for _, model in ipairs(game.Workspace:GetDescendants()) do
             if model:IsA("Model") and model.Name == "Model" then
-                local hitBox = model:FindFirstChild("Hitbox")
-                if hitBox then
-                    for _, part in ipairs(model:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.Transparency = 0.6
-                            part.CanCollide = false
+                for _, part in ipairs(model:GetDescendants()) do
+                    if part:IsA("BasePart") and table.find(partsToCheck, part.Name) then
+                        if not originalProperties[part] then
+                            originalProperties[part] = {
+                                Transparency = part.Transparency,
+                                CanCollide = part.CanCollide
+                            }
                         end
+
+                        part.Transparency = 0.6
+                        part.CanCollide = false
                     end
                 end
             end
         end
     else
-        for _, model in ipairs(game.Workspace:GetDescendants()) do
-            if model:IsA("Model") and model.Name == "Model" then
-                local hitBox = model:FindFirstChild("Hitbox")
-                if hitBox then
-                    for _, part in ipairs(model:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.Transparency = 0
-                            part.CanCollide = true
-                        end
-                    end
-                end
-            end
+        for part, properties in pairs(originalProperties) do
+            part.Transparency = properties.Transparency
+            part.CanCollide = properties.CanCollide
+            originalProperties[part] = nil
         end
     end
-end)
+end
 
+local recheckingEnabled = false
 
+local toggle
+toggle = Visualssection:Toggle("NoClip (Real Buggy)", function(bool)
+    isNoClip = bool
+    recheckingEnabled = bool
 
-
--- Aim Section --
-local title = Aimsection:Title("Aiming")
-
-local isLock = false
-local toggle = Aimsection:Toggle("Lock (RMB)", function(bool)
-    isLock = bool
-    while isLock do
-        wait()
-
+    if recheckingEnabled then
+        while recheckingEnabled do
+            updateParts()
+            wait(recheckingInterval)
+        end
+    else
+        updateParts()
     end
 end)
 
+local toggle = Visualssection:Toggle("Chat", function(bool)
+    if bool == true then
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = false
+    else bool = false do
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = true
+    end
+    end
+end)
+
+local toggle = Visualssection:Toggle("Server Location", function(bool)
+    if bool == true then
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = false
+    else bool = false do
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = true
+    end
+    end
+end)
+
+local toggle = Visualssection:Toggle("Blood", function(bool)
+    if bool == true then
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.BloodSplatter.Visible = false
+    else bool = false do
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.BloodSplatter.Visible = true
+    end
+    end
+end)
+
+local toggle = Visualssection:Toggle("Crosshair", function(bool)
+    game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.BackgroundColor3 = Color3.new(255, 0, 0)
+    if bool == true then
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.Visible = true
+    else bool = false do
+        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.Visible = false
+    end
+    end
+end)
+
+local toggle = Visualssection:Toggle("Character Color Enabled", function(bool)
+    if bool == true then
+        game.Workspace.Ignore.FPSArms.RightLowerArm.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.RightLowerArm.Color = Color3.new(1, 0, 0)
+
+        game.Workspace.Ignore.FPSArms.RightHand.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.RightHand.Color = Color3.new(1, 0, 0)
+
+        game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.LeftLowerArm.Color = Color3.new(1, 0, 0)
+
+        game.Workspace.Ignore.FPSArms.RightUpperArm.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.RightUpperArm.Color = Color3.new(1, 0, 0)
+
+        game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.LeftUpperArm.Color = Color3.new(1, 0, 0)
+
+        game.Workspace.Ignore.FPSArms.LeftHand.Material = Enum.Material.ForceField
+        game.Workspace.Ignore.FPSArms.LeftHand.Color = Color3.new(1, 0, 0)
+    else bool = false do
+        local defaultMaterial = Enum.Material.SmoothPlastic
+        local defaultColor = BrickColor.new("Lemon metalic")
+            game.Workspace.Ignore.FPSArms.RightLowerArm.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.RightLowerArm.BrickColor = defaultColor
+
+            game.Workspace.Ignore.FPSArms.RightHand.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.RightHand.BrickColor = defaultColor
+
+            game.Workspace.Ignore.FPSArms.RightUpperArm.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.RightUpperArm.BrickColor = defaultColor
+
+            game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.LeftUpperArm.BrickColor = defaultColor
+
+            game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.LeftLowerArm.BrickColor = defaultColor
+
+            game.Workspace.Ignore.FPSArms.LeftHand.Material = defaultMaterial
+            game.Workspace.Ignore.FPSArms.LeftHand.BrickColor = defaultColor
+    end
+    end
+end)
+
+-- Aim Section --
 local isSilentAim = false
-local toggle = Aimsection:Toggle("Silent Aim", function(bool)
+local toggle = Silentaimsection:Toggle("Silent Aim", function(bool)
     isSilentAim = bool
     while isSilentAim do
         wait()
@@ -97,7 +192,7 @@ local toggle = Aimsection:Toggle("Silent Aim", function(bool)
 end)
 
 local isFOV = false
-local toggle = Aimsection:Toggle("Enabled FOV", function(bool)
+local toggle = Silentaimsection:Toggle("Enabled FOV", function(bool)
     isFOV = bool
     while isFOV do
         wait()
@@ -105,13 +200,104 @@ local toggle = Aimsection:Toggle("Enabled FOV", function(bool)
     end
 end)
 
-Aimsection:Slider("FOV Size", function(val)
+Silentaimsection:Slider("FOV Size", function(val)
     
 end, 10, 5)
 
--- ESP Section --
-local title = ESPsection:Title("Esping")
+local isenabledhithead = false
+local toggle = headtorsosection:Toggle("Head", function(bool)
+    isenabledhithead = bool
+    while isenabledhithead do
+        wait()
 
+    end
+end)
+
+headtorsosection:Slider("Head Size", function(val)
+    
+end, 4, 1)
+
+local isenabledhittor = false
+local toggle = headtorsosection:Toggle("Torso", function(bool)
+    isenabledhittor = bool
+    while isenabledhittor do
+        wait()
+
+    end
+end)
+
+headtorsosection:Slider("Torso Size", function(val)
+    
+end, 4, 1)
+
+local isenabledmod = false
+local toggle = weaponmodsection:Toggle("enabled", function(bool)
+    isenabledmod = bool
+    while isenabledmod do
+        wait()
+
+    end
+end)
+
+local isnorecoil = false
+local toggle = weaponmodsection:Toggle("No-Recoil", function(bool)
+    isnorecoil = bool
+    while isnorecoil do
+        wait()
+
+    end
+end)
+
+local isnospread = false
+local toggle = weaponmodsection:Toggle("No-Spread", function(bool)
+    isnospread = bool
+    while isnospread do
+        wait()
+
+    end
+end)
+
+local isfirerate = false
+local toggle = weaponmodsection:Toggle("FireRate", function(bool)
+    isfirerate = bool
+    while isfirerate do
+        wait()
+
+    end
+end)
+
+local firetypedropdown = weaponmodsection:Dropdown("Fire type")
+firetypedropdown:Toggle("Semi")
+firetypedropdown:Toggle("Automatic")
+
+
+local iskillaura = false
+local toggle = aurasection:Toggle("Kill Aura", function(bool)
+    iskillaura = bool
+    while iskillaura do
+        wait()
+
+    end
+end)
+
+aurasection:Slider("Hit Distance", function(val)
+    
+end, 10, 1)
+
+local hitpartdropdowm = aurasection:Dropdown("Hit Part")
+hitpartdropdowm:Toggle("Head")
+hitpartdropdowm:Toggle("Torso")
+
+local ishitfarm = false
+local toggle = aurasection:Toggle("Auto hit (Farming)", function(bool)
+    ishitfarm = bool
+    while ishitfarm do
+        wait()
+
+    end
+end)
+
+-- ESP Section --
 local isPlrESPbox = false
 local highlightTable = {}
 
@@ -137,7 +323,7 @@ local function destroyHighlight(model)
 end
 
 local toggle
-toggle = ESPsection:Toggle("Player ESPv1", function(bool)
+toggle = Plrsection:Toggle("Player ESPv1", function(bool)
     isPlrESPbox = bool
 
     if not isPlrESPbox then
@@ -187,7 +373,7 @@ local function destroyHighlight(model)
 end
 
 local toggle
-toggle = ESPsection:Toggle("Player ESPv2", function(bool)
+toggle = Plrsection:Toggle("Player ESPv2", function(bool)
     isPlrESP = bool
 
     if not isPlrESP then
@@ -237,7 +423,7 @@ local function destroyHighlight(model)
 end
 
 local toggle
-toggle = ESPsection:Toggle("ToolCupboard ESP", function(bool)
+toggle = Objectsection:Toggle("ToolCupboard ESP", function(bool)
     iscupbaordenabled = bool
 
     if not iscupbaordenabled then
@@ -295,7 +481,7 @@ local function destroyHighlight(model)
 end
 
 local toggle
-toggle = ESPsection:Toggle("IronOre ESP", function(bool)
+toggle = OREsection:Toggle("IronOre ESP", function(bool)
     ironoreesp = bool
 
     if not ironoreesp then
@@ -356,7 +542,7 @@ local function destroyHighlight(model)
 end
 
 local toggle
-toggle = ESPsection:Toggle("NiterousOre ESP", function(bool)
+toggle = OREsection:Toggle("NiterousOre ESP", function(bool)
     niteroreesp = bool
 
     if not niteroreesp then
@@ -396,66 +582,9 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
-
-
-
 -- Malicious Section --
-local title = Malicioussection:Title("Devious")
 
-local label = Malicioussection:Label("Duping")
-Malicioussection:Slider("How many tools to bring", function(val)
-    
-end, 10, 1)
 
-Malicioussection:Button("Bring Tools", function()
-   
-end)
-
-Malicioussection:Button("Dupe (Hold the Tool)", function()
-   
-end)
-
-local label = Malicioussection:Label("Kill Area")
-Malicioussection:TextBox("Players Name", function(txt)
-   
-end)
-
-local isspecate = false
-local toggle = Malicioussection:Toggle("Spectate Player", function(bool)
-    isspecate = bool
-    while isspecate do
-        wait()
-        
-    end
-end)
-
-local iskillplr = false
-local toggle = Malicioussection:Toggle("Kill Player", function(bool)
-    iskillplr = bool
-    while iskillplr do
-        wait()
-        
-    end
-end)
-
-local label = Malicioussection:Label("Crashing/Lagging")
-local iscrashing = false
-local toggle = Malicioussection:Toggle("Crash Server", function(bool)
-    iscrashing = bool
-    while iscrashing do
-        wait()
-        
-    end
-end)
-
-local islagging = false
-local toggle = Malicioussection:Toggle("Lag Server (Next Update)", function(bool)
-    islagging = bool
-    while islagging do
-        wait()
-        
-    end
-end)
 
 -- Settings Section --
 local title = Settingssection:Title("Game Settings")
@@ -470,3 +599,8 @@ local toggle = Settingssection:Toggle("Full Bright", function(bool)
         game.Lighting.FogStart = 999999999999999999
     end
 end)
+
+
+-- Malicioussection:TextBox("Players Name", function(txt)
+   
+-- end)
