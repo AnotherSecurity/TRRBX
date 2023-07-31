@@ -1,303 +1,529 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/cerberus.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/AnotherSecurity/fug49fg19du8/main/2959729834"))()
 
-local window = Library.new("Security.lua - Trident")
-window:LockScreenBoundaries(true)
+local MainFrame = Library:CreateWindow({
+	Name = "armored.cc - Trident",
+	Themeable = {
+		Info = "Made by armored.cc on discord\nDiscord Server: CKqQhfGsrp",
+		Credit = false
+	},
+	Background = "",
+	Theme = [[{"__Designer.Colors.topGradient":"000000","__Designer.Settings.ShowHideKey":"Enum.KeyCode.LShift","__Designer.Colors.section":"FFFFFF","__Designer.Colors.hoveredOptionBottom":"2D2D2D","__Designer.Background.ImageAssetID":"","__Designer.Colors.selectedOption":"000000","__Designer.Colors.unselectedOption":"282828","__Designer.Files.WorkspaceFile":"armored.CC","__Designer.Colors.unhoveredOptionTop":"323232","__Designer.Colors.outerBorder":"FF0000","__Designer.Background.ImageColor":"FFFFFF","__Designer.Colors.tabText":"FFFFFF","__Designer.Colors.elementBorder":"5C0000","__Designer.Colors.sectionBackground":"171717","__Designer.Colors.innerBorder":"000000","__Designer.Background.ImageTransparency":100,"__Designer.Colors.bottomGradient":"000000","__Designer.Colors.elementText":"FFFFFF","__Designer.Colors.hoveredOptionTop":"414141","__Designer.Colors.otherElementText":"FFFFFF","__Designer.Colors.main":"FF2727","__Designer.Colors.background":"000000","__Designer.Colors.unhoveredOptionBottom":"232323","__Designer.Background.UseBackgroundImage":false}]]
+})
 
--- Tab Area --
-local Localplrtab = window:Tab("Local Player")
-local Combattab = window:Tab("Combat")
-local ESPtab = window:Tab("ESP")
-local Malicioustab = window:Tab("Malicious")
-local Settingstab = window:Tab("Settings")
+-- Tabs --
 
--- Section Area -- 
-
--- Local Player --
-local Speedsection = Localplrtab:Section("Speed")
-local Visualssection = Localplrtab:Section("Visuals")
- -- Combat --
-local Silentaimsection = Combattab:Section("Silent Aim")
-local weaponmodsection = Combattab:Section("Weapon Modification")
-local headtorsosection = Combattab:Section("Head/Torso Hitbox")
-local aurasection = Combattab:Section("Aura")
-
--- ESP --
-local Plrsection = ESPtab:Section("Player ESP")
-local Objectsection = ESPtab:Section("Object ESP")
-local OREsection = ESPtab:Section("Ore ESP")
-
--- Malicious --
-local Malicioussection = Malicioustab:Section("")
-
--- Settings --
-local Settingssection = Settingstab:Section("World Settings")
-
--- Scripts/Buttons Area --
--- Player Section --
-local title = Speedsection:Title("CFrame")
-Speedsection:Button("CFrame (X)", function()
-
-end)
-Speedsection:Slider("CFrame Speed", function(val)
-    
-end, 5, 1)
-local title = Speedsection:Title("Infinite Jump")
-Speedsection:Button("Infinite Jump", function()
-
-end)
-Speedsection:Slider("Jump Height", function(val)
-    
-end, 250, 50)
+local lcplayerTab = MainFrame:CreateTab({
+	Name = "LocalPlayer"
+})
 
 
-local isNoClip = false
-local recheckingInterval = 5
-local partsToCheck = {"Hitbox", "Enclosure", "Wall"}
+local CombatTab = MainFrame:CreateTab({
+	Name = "Combat"
+})
 
-local originalProperties = {}
 
-local function updateParts()
-    if isNoClip then
-        for _, model in ipairs(game.Workspace:GetDescendants()) do
-            if model:IsA("Model") and model.Name == "Model" then
-                for _, part in ipairs(model:GetDescendants()) do
-                    if part:IsA("BasePart") and table.find(partsToCheck, part.Name) then
-                        if not originalProperties[part] then
-                            originalProperties[part] = {
-                                Transparency = part.Transparency,
-                                CanCollide = part.CanCollide
-                            }
-                        end
+local ESPTab = MainFrame:CreateTab({
+	Name = "ESP"
+})
 
-                        part.Transparency = 0.6
-                        part.CanCollide = false
-                    end
-                end
-            end
-        end
+--[[
+local MaliciousTab = MainFrame:CreateTab({
+	Name = "Malicious"
+})
+]]
+
+--[[
+local WorldsettingsTab = MainFrame:CreateTab({
+	Name = "World"
+})
+]]
+
+local  DividerTab = MainFrame:CreateTab({
+	Name = "|"
+})
+
+-- Sections --
+
+-- Local Player Section -- 
+local Visualssection = lcplayerTab:CreateSection({
+	Name = "Visuals",
+    Side = "Right"
+})
+
+-- Combat Section --
+
+local Silentaimsection = CombatTab:CreateSection({
+	Name = "Silent Aim"
+})
+
+local hitboxsection = CombatTab:CreateSection({
+	Name = "Head/Torso Hitbox"
+})
+
+local weaponmodsection = CombatTab:CreateSection({
+	Name = "Weapon Modification",
+    Side = "Right"
+})
+
+local aurasection = CombatTab:CreateSection({
+	Name = "Aura",
+    Side = "Right"
+})
+
+local trollingsection = CombatTab:CreateSection({
+	Name = "Trolling",
+    Side = "Right"
+})
+
+-- ESP Section --
+
+local PlayerESPsection = ESPTab:CreateSection({
+	Name = "Player ESP"
+})
+
+local OreESPsection = ESPTab:CreateSection({
+	Name = "Ore ESP"
+})
+
+local ObESPsection = ESPTab:CreateSection({
+	Name = "Object ESP",
+    Side = "Right"
+})
+
+-- Malicious ESP --
+--[[
+local exploitssection = MaliciousTab:CreateSection({
+	Name = "Exploits"
+})
+
+local extrasection = MaliciousTab:CreateSection({
+	Name = "Extra",
+    Side = "Right"
+})
+]]
+-- World Section -- 
+
+--[[
+local lightingsection = WorldsettingsTab:CreateSection({
+	Name = "Lighting"
+})
+]]
+
+-- Scripts/Buttons --
+
+-- Local Visual Area --
+local isFullBright = false
+local loopThread = nil
+
+local function SetFullBright(enabled)
+    if enabled then
+        game.Lighting.Brightness = 2
+        game.Lighting.Ambient = Color3.new(1, 1, 1)
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogStart = 999999999999999999
     else
-        for part, properties in pairs(originalProperties) do
-            part.Transparency = properties.Transparency
-            part.CanCollide = properties.CanCollide
-            originalProperties[part] = nil
+        game.Lighting.Brightness = 1
+        game.Lighting.Ambient = Color3.new(0.5, 0.5, 0.5)
+        game.Lighting.GlobalShadows = true
+        game.Lighting.FogStart = 0
+    end
+end
+
+Visualssection:AddToggle({
+    Name = "Full Bright",
+    Callback = function(New, Old)
+        isFullBright = New
+        
+        if isFullBright then
+            loopThread = coroutine.create(function()
+                while isFullBright do
+                    SetFullBright(true)
+                    wait()
+                end
+            end)
+            coroutine.resume(loopThread)
+        elseif loopThread then
+            isFullBright = false
+            coroutine.resume(loopThread)
+            loopThread = nil
+            SetFullBright(false)
+        else
+            SetFullBright(false)
+        end
+    end
+})
+
+
+--[[
+Visualssection:AddToggle({
+	Name = "Base Xray",
+	Callback = function(New, Old)
+		
+	end
+})
+]]
+
+Visualssection:AddToggle({
+	Name = "Chat",
+	Callback = function(New, Old)
+		if New == true then
+            game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = false
+        else New = false do
+            game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = true
+        end
+        end
+	end
+})
+
+--[[
+Visualssection:AddToggle({
+	Name = "Blood",
+	Callback = function(New, Old)
+		
+	end
+})
+]]
+
+Visualssection:AddToggle({
+	Name = "Char Color Enabled",
+	Callback = function(New, Old)
+		if New == true then
+            game.Workspace.Ignore.FPSArms.RightLowerArm.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.RightLowerArm.Color = Color3.new(1, 0, 0)
+    
+            game.Workspace.Ignore.FPSArms.RightHand.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.RightHand.Color = Color3.new(1, 0, 0)
+    
+            game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.LeftLowerArm.Color = Color3.new(1, 0, 0)
+    
+            game.Workspace.Ignore.FPSArms.RightUpperArm.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.RightUpperArm.Color = Color3.new(1, 0, 0)
+    
+            game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.LeftUpperArm.Color = Color3.new(1, 0, 0)
+    
+            game.Workspace.Ignore.FPSArms.LeftHand.Material = Enum.Material.ForceField
+            game.Workspace.Ignore.FPSArms.LeftHand.Color = Color3.new(1, 0, 0)
+        else New = false do
+            local defaultMaterial = Enum.Material.SmoothPlastic
+            local defaultColor = BrickColor.new("Lemon metalic")
+                game.Workspace.Ignore.FPSArms.RightLowerArm.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.RightLowerArm.BrickColor = defaultColor
+    
+                game.Workspace.Ignore.FPSArms.RightHand.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.RightHand.BrickColor = defaultColor
+    
+                game.Workspace.Ignore.FPSArms.RightUpperArm.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.RightUpperArm.BrickColor = defaultColor
+    
+                game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.LeftUpperArm.BrickColor = defaultColor
+    
+                game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.LeftLowerArm.BrickColor = defaultColor
+    
+                game.Workspace.Ignore.FPSArms.LeftHand.Material = defaultMaterial
+                game.Workspace.Ignore.FPSArms.LeftHand.BrickColor = defaultColor
+        end
+        end
+	end
+})
+
+Visualssection:AddToggle({
+	Name = "Server Location",
+	Callback = function(New, Old)
+		if New == true then
+            game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = false
+        else New = false do
+            game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = true
+        end
+        end
+	end
+})
+
+-- Combat Area --
+
+--[[
+weaponmodsection:AddToggle({
+	Name = "Enabled",
+	Callback = function(New, Old)
+		
+	end
+})
+
+weaponmodsection:AddToggle({
+	Name = "No-Recoil",
+	Callback = function(New, Old)
+		
+	end
+})
+]]
+
+local isheadsize = false
+
+local headsize = Vector3.new(1.6, 1.6, 1.6)
+
+local function changeHeadSize(model)
+    local head = model:FindFirstChild("Head")
+    if head then
+        head.Size = headsize
+        head.Transparency = 0.6
+    end
+end
+
+local function updateHeadSizes()
+    for _, model in ipairs(game.Workspace:GetDescendants()) do
+        if model:IsA("Model") and model:FindFirstChild("Head") then
+            changeHeadSize(model)
         end
     end
 end
 
-local recheckingEnabled = false
+hitboxsection:AddToggle({
+    Name = "Head",
+    Callback = function(New, Old)
+        isheadsize = New
 
-local toggle
-toggle = Visualssection:Toggle("NoClip (Real Buggy)", function(bool)
-    isNoClip = bool
-    recheckingEnabled = bool
-
-    if recheckingEnabled then
-        while recheckingEnabled do
-            updateParts()
-            wait(recheckingInterval)
+        if isheadsize then
+            updateHeadSizes() -- Update head sizes for all players in Workspace
+        else
+            -- Reset head sizes to default values when the toggle is turned off
+            for _, model in ipairs(game.Workspace:GetDescendants()) do
+                if model:IsA("Model") and model:FindFirstChild("Head") then
+                    local defaultSize = Vector3.new(1.6, 1.6, 1.2) -- Change this to the default head size
+                    model.Head.Size = defaultSize
+                    model.Head.Transparency = 0
+                end
+            end
         end
+    end
+})
+
+local function updateHeadSizeX(Value)
+    headsize = Vector3.new(Value, headsize.Y, headsize.Z)
+    if Value == 0 then
+        return "X: Default"
     else
-        updateParts()
+        return "X: " .. tostring(Value)
     end
-end)
+end
 
-local toggle = Visualssection:Toggle("Chat", function(bool)
-    if bool == true then
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = false
-    else bool = false do
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Chat.Visible = true
+local function updateHeadSizeY(Value)
+    headsize = Vector3.new(headsize.X, Value, headsize.Z)
+    if Value == 0 then
+        return "Y: Default"
+    else
+        return "Y: " .. tostring(Value)
     end
+end
+
+local function updateHeadSizeZ(Value)
+    headsize = Vector3.new(headsize.X, headsize.Y, Value)
+    if Value == 0 then
+        return "Z: Default"
+    else
+        return "Z: " .. tostring(Value)
     end
-end)
+end
 
-local toggle = Visualssection:Toggle("Server Location", function(bool)
-    if bool == true then
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = false
-    else bool = false do
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ServerInfo.Visible = true
+hitboxsection:AddSlider({
+    Name = "X",
+    Flag = "hitboxsection_HeadSizeX",
+    Value = 1.6,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateHeadSizeX,
+    ValueChanged = function(Value)
+        updateHeadSizeX(Value)
+        if isheadsize then
+            updateHeadSizes()
+        end
+    end,
+})
+
+hitboxsection:AddSlider({
+    Name = "Y",
+    Flag = "hitboxsection_HeadSizeY",
+    Value = 1.6,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateHeadSizeY,
+    ValueChanged = function(Value)
+        updateHeadSizeY(Value)
+        if isheadsize then
+            updateHeadSizes()
+        end
+    end,
+})
+
+hitboxsection:AddSlider({
+    Name = "Z",
+    Flag = "hitboxsection_HeadSizeZ",
+    Value = 1.6,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateHeadSizeZ,
+    ValueChanged = function(Value)
+        updateHeadSizeZ(Value)
+        if isheadsize then
+            updateHeadSizes()
+        end
+    end,
+})
+
+
+local istorsosize = false
+
+local torsosize = Vector3.new(1.6, 1.6, 1.6)
+
+local function changeTorsoSize(model)
+    local torso = model:FindFirstChild("Torso")
+    if torso then
+        torso.Size = torsosize
+        torso.Transparency = 0.6
     end
+end
+
+local function updateTorsoSizes()
+    for _, model in ipairs(game.Workspace:GetDescendants()) do
+        if model:IsA("Model") and model:FindFirstChild("Torso") then
+            changeTorsoSize(model)
+        end
     end
-end)
+end
 
-local toggle = Visualssection:Toggle("Blood", function(bool)
-    if bool == true then
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.BloodSplatter.Visible = false
-    else bool = false do
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.BloodSplatter.Visible = true
+hitboxsection:AddToggle({
+    Name = "Torso",
+    Callback = function(New, Old)
+        istorsosize = New
+
+        if istorsosize then
+            updateTorsoSizes()
+        else
+            for _, model in ipairs(game.Workspace:GetDescendants()) do
+                if model:IsA("Model") and model:FindFirstChild("Torso") then
+                    local defaultSize = Vector3.new(1.2,1.2,1.2)
+                    model.Torso.Size = defaultSize
+                    model.Torso.Transparency = 0
+                end
+            end
+        end
     end
+})
+
+local function updateTorsoSizeX(Value)
+    torsosize = Vector3.new(Value, torsosize.Y, torsosize.Z)
+    if Value == 0 then
+        return "X: Default"
+    else
+        return "X: " .. tostring(Value)
     end
-end)
+end
 
-local toggle = Visualssection:Toggle("Crosshair", function(bool)
-    game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.BackgroundColor3 = Color3.new(255, 0, 0)
-    if bool == true then
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.Visible = true
-    else bool = false do
-        game:GetService("Players").LocalPlayer.PlayerGui.GameUI.ControllerMouse.Visible = false
+local function updateTorsoSizeY(Value)
+    torsosize = Vector3.new(torsosize.X, Value, torsosize.Z)
+    if Value == 0 then
+        return "Y: Default"
+    else
+        return "Y: " .. tostring(Value)
     end
+end
+
+local function updateTorsoSizeZ(Value)
+    torsosize = Vector3.new(torsosize.X, torsosize.Y, Value)
+    if Value == 0 then
+        return "Z: Default"
+    else
+        return "Z: " .. tostring(Value)
     end
-end)
+end
 
-local toggle = Visualssection:Toggle("Character Color Enabled", function(bool)
-    if bool == true then
-        game.Workspace.Ignore.FPSArms.RightLowerArm.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.RightLowerArm.Color = Color3.new(1, 0, 0)
+hitboxsection:AddSlider({
+    Name = "X",
+    Flag = "hitboxsection_TorsoSizeX",
+    Value = 1.3,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateTorsoSizeX,
+    ValueChanged = function(Value)
+        updateTorsoSizeX(Value)
+        if istorsosize then
+            updateTorsoSizes()
+        end
+    end,
+})
 
-        game.Workspace.Ignore.FPSArms.RightHand.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.RightHand.Color = Color3.new(1, 0, 0)
+hitboxsection:AddSlider({
+    Name = "Y",
+    Flag = "hitboxsection_TorsoSizeY",
+    Value = 1.3,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateTorsoSizeY,
+    ValueChanged = function(Value)
+        updateTorsoSizeY(Value)
+        if istorsosize then
+            updateTorsoSizes()
+        end
+    end,
+})
 
-        game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.LeftLowerArm.Color = Color3.new(1, 0, 0)
+hitboxsection:AddSlider({
+    Name = "Z",
+    Flag = "hitboxsection_TorsoSizeZ",
+    Value = 1.3,
+    Precise = 2,
+    Min = 1.2,
+    Max = 2.5,
+    Textbox = true,
+    Format = updateTorsoSizeZ,
+    ValueChanged = function(Value)
+        updateTorsoSizeZ(Value)
+        if istorsosize then
+            updateTorsoSizes()
+        end
+    end,
+})
 
-        game.Workspace.Ignore.FPSArms.RightUpperArm.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.RightUpperArm.Color = Color3.new(1, 0, 0)
-
-        game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.LeftUpperArm.Color = Color3.new(1, 0, 0)
-
-        game.Workspace.Ignore.FPSArms.LeftHand.Material = Enum.Material.ForceField
-        game.Workspace.Ignore.FPSArms.LeftHand.Color = Color3.new(1, 0, 0)
-    else bool = false do
-        local defaultMaterial = Enum.Material.SmoothPlastic
-        local defaultColor = BrickColor.new("Lemon metalic")
-            game.Workspace.Ignore.FPSArms.RightLowerArm.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.RightLowerArm.BrickColor = defaultColor
-
-            game.Workspace.Ignore.FPSArms.RightHand.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.RightHand.BrickColor = defaultColor
-
-            game.Workspace.Ignore.FPSArms.RightUpperArm.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.RightUpperArm.BrickColor = defaultColor
-
-            game.Workspace.Ignore.FPSArms.LeftUpperArm.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.LeftUpperArm.BrickColor = defaultColor
-
-            game.Workspace.Ignore.FPSArms.LeftLowerArm.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.LeftLowerArm.BrickColor = defaultColor
-
-            game.Workspace.Ignore.FPSArms.LeftHand.Material = defaultMaterial
-            game.Workspace.Ignore.FPSArms.LeftHand.BrickColor = defaultColor
+local function findChatRemoteEvent()
+    local gameDescendants = game:GetDescendants()
+    for _, descendant in ipairs(gameDescendants) do
+        if descendant:IsA("RemoteEvent") and descendant.Name == "ChatEvent" then
+            return descendant
+        end
     end
+    return nil
+end
+
+trollingsection:AddButton({
+    Name = "Fake kill log",
+    Callback = function()
+        -- Get the player who pressed the button
+        local player = game.Players.LocalPlayer
+
+        -- Check if the player exists and is a valid player
+        if player then
+            -- Simulate the player typing the chat message
+            local message = "7Guue2JS"
+            game:GetService("Players"):Chat(message)
+        end
     end
-end)
-
--- Aim Section --
-local isSilentAim = false
-local toggle = Silentaimsection:Toggle("Silent Aim", function(bool)
-    isSilentAim = bool
-    while isSilentAim do
-        wait()
-
-    end
-end)
-
-local isFOV = false
-local toggle = Silentaimsection:Toggle("Enabled FOV", function(bool)
-    isFOV = bool
-    while isFOV do
-        wait()
-
-    end
-end)
-
-Silentaimsection:Slider("FOV Size", function(val)
-    
-end, 10, 5)
-
-local isenabledhithead = false
-local toggle = headtorsosection:Toggle("Head", function(bool)
-    isenabledhithead = bool
-    while isenabledhithead do
-        wait()
-
-    end
-end)
-
-headtorsosection:Slider("Head Size", function(val)
-    
-end, 4, 1)
-
-local isenabledhittor = false
-local toggle = headtorsosection:Toggle("Torso", function(bool)
-    isenabledhittor = bool
-    while isenabledhittor do
-        wait()
-
-    end
-end)
-
-headtorsosection:Slider("Torso Size", function(val)
-    
-end, 4, 1)
-
-local isenabledmod = false
-local toggle = weaponmodsection:Toggle("enabled", function(bool)
-    isenabledmod = bool
-    while isenabledmod do
-        wait()
-
-    end
-end)
-
-local isnorecoil = false
-local toggle = weaponmodsection:Toggle("No-Recoil", function(bool)
-    isnorecoil = bool
-    while isnorecoil do
-        wait()
-
-    end
-end)
-
-local isnospread = false
-local toggle = weaponmodsection:Toggle("No-Spread", function(bool)
-    isnospread = bool
-    while isnospread do
-        wait()
-
-    end
-end)
-
-local isfirerate = false
-local toggle = weaponmodsection:Toggle("FireRate", function(bool)
-    isfirerate = bool
-    while isfirerate do
-        wait()
-
-    end
-end)
-
-local firetypedropdown = weaponmodsection:Dropdown("Fire type")
-firetypedropdown:Toggle("Semi")
-firetypedropdown:Toggle("Automatic")
+})
 
 
-local iskillaura = false
-local toggle = aurasection:Toggle("Kill Aura", function(bool)
-    iskillaura = bool
-    while iskillaura do
-        wait()
 
-    end
-end)
-
-aurasection:Slider("Hit Distance", function(val)
-    
-end, 10, 1)
-
-local hitpartdropdowm = aurasection:Dropdown("Hit Part")
-hitpartdropdowm:Toggle("Head")
-hitpartdropdowm:Toggle("Torso")
-
-local ishitfarm = false
-local toggle = aurasection:Toggle("Auto hit (Farming)", function(bool)
-    ishitfarm = bool
-    while ishitfarm do
-        wait()
-
-    end
-end)
-
--- ESP Section --
+-- ESP Area --
 local isPlrESPbox = false
 local highlightTable = {}
 
@@ -322,16 +548,18 @@ local function destroyHighlight(model)
     end
 end
 
-local toggle
-toggle = Plrsection:Toggle("Player ESPv1", function(bool)
-    isPlrESPbox = bool
+PlayerESPsection:AddToggle({
+	Name = "Player ESPv1",
+	Callback = function(New, Old)
+	isPlrESPbox = New
 
     if not isPlrESPbox then
         for model, _ in pairs(highlightTable) do
             destroyHighlight(model)
         end
     end
-end)
+	end
+})
 
 local RunService = game:GetService("RunService")
 
@@ -349,258 +577,3 @@ RunService.Heartbeat:Connect(function()
         end
     end
 end)
-
-local isPlrESP = false
-local highlightTablev1 = {}
-
-local function createHighlight(model)
-    local esp = Instance.new("Highlight")
-    esp.Name = "ESP"
-    esp.FillTransparency = 1
-    esp.FillColor = Color3.new(1, 0.666667, 0)
-    esp.OutlineColor = Color3.new(255, 255, 255)
-    esp.OutlineTransparency = 0
-    esp.Parent = model
-    highlightTablev1[model] = esp
-end
-
-local function destroyHighlight(model)
-    local esp = highlightTablev1[model]
-    if esp then
-        esp:Destroy()
-        highlightTablev1[model] = nil
-    end
-end
-
-local toggle
-toggle = Plrsection:Toggle("Player ESPv2", function(bool)
-    isPlrESP = bool
-
-    if not isPlrESP then
-        for model, _ in pairs(highlightTablev1) do
-            destroyHighlight(model)
-        end
-    end
-end)
-
-local RunService = game:GetService("RunService")
-
-RunService.Heartbeat:Connect(function()
-    if isPlrESP then
-        for _, model in ipairs(game.Workspace:GetChildren()) do
-            if model:IsA("Model") and model:FindFirstChild("Armor") then
-                local esp = highlightTablev1[model]
-                if not esp then
-                    createHighlight(model)
-                end
-            else
-                destroyHighlight(model)
-            end
-        end
-    end
-end)
-
-local iscupbaordenabled = false
-local highlightTablev3 = {}
-
-local function createHighlight(model)
-    local esp = Instance.new("Highlight")
-    esp.Name = "ESP"
-    esp.FillTransparency = 1
-    esp.FillColor = Color3.new(1, 0.666667, 0)
-    esp.OutlineColor = Color3.new(255, 255, 255)
-    esp.OutlineTransparency = 0
-    esp.Parent = model
-    highlightTablev3[model] = esp
-end
-
-local function destroyHighlight(model)
-    local esp = highlightTablev3[model]
-    if esp then
-        esp:Destroy()
-        highlightTablev3[model] = nil
-    end
-end
-
-local toggle
-toggle = Objectsection:Toggle("ToolCupboard ESP", function(bool)
-    iscupbaordenabled = bool
-
-    if not iscupbaordenabled then
-        for model, _ in pairs(highlightTablev3) do
-            destroyHighlight(model)
-        end
-    end
-end)
-
-local function hasWhisperSound(bodyPart)
-    if bodyPart:IsA("BasePart") and bodyPart:FindFirstChild("Whisper") and bodyPart:FindFirstChild("Whisper"):IsA("Sound") then
-        return true
-    end
-    return false
-end
-
-local RunService = game:GetService("RunService")
-
-RunService.Heartbeat:Connect(function()
-    if iscupbaordenabled then
-        for _, model in ipairs(game.Workspace:GetChildren()) do
-            local bodyPart = model:FindFirstChild("Body")
-            if model:IsA("Model") and bodyPart and hasWhisperSound(bodyPart) then
-                local esp = highlightTablev3[model]
-                if not esp then
-                    createHighlight(model)
-                end
-            else
-                destroyHighlight(model)
-            end
-        end
-    end
-end)
-
-local ironoreesp = false
-local highlightTablev5 = {}
-
-local function createHighlight(model)
-    local esp = Instance.new("Highlight")
-    esp.Name = "ESP"
-    esp.FillTransparency = 0.3
-    esp.FillColor = Color3.new(199/255, 172/255, 120/255)
-    esp.OutlineColor = Color3.new(255, 255, 255)
-    esp.OutlineTransparency = 0
-    esp.Parent = model
-    highlightTablev5[model] = esp
-end
-
-local function destroyHighlight(model)
-    local esp = highlightTablev5[model]
-    if esp then
-        esp:Destroy()
-        highlightTablev5[model] = nil
-    end
-end
-
-local toggle
-toggle = OREsection:Toggle("IronOre ESP", function(bool)
-    ironoreesp = bool
-
-    if not ironoreesp then
-        for model, _ in pairs(highlightTablev5) do
-            destroyHighlight(model)
-        end
-    end
-end)
-
-local function hasBrownPart(model)
-    for _, part in ipairs(model:GetDescendants()) do
-        if part:IsA("BasePart") and part.Color == Color3.fromRGB(199, 172, 120) then
-            return true
-        end
-    end
-    return false
-end
-
-local RunService = game:GetService("RunService")
-
-RunService.Heartbeat:Connect(function()
-    if ironoreesp then
-        for _, model in ipairs(game.Workspace:GetChildren()) do
-            if model:IsA("Model") and hasBrownPart(model) then
-                local esp = highlightTablev5[model]
-                if not esp then
-                    createHighlight(model)
-                end
-            else
-                destroyHighlight(model)
-            end
-        end
-    end
-end)
-
-local niteroreesp = false
-local highlightTablev6 = {}
-
-local function createHighlight(model)
-    local esp = Instance.new("BoxHandleAdornment")
-    esp.Name = "ESPBox"
-    esp.Size = Vector3.new(2, 2, 2)
-    esp.Adornee = model
-    esp.AlwaysOnTop = true
-    esp.ZIndex = 5
-    esp.Transparency = 0
-    esp.Color3 = Color3.new(255,255,255)
-    esp.Parent = model
-    highlightTablev6[model] = esp
-end
-
-local function destroyHighlight(model)
-    local esp = highlightTablev6[model]
-    if esp then
-        esp:Destroy()
-        highlightTablev6[model] = nil
-    end
-end
-
-local toggle
-toggle = OREsection:Toggle("NiterousOre ESP", function(bool)
-    niteroreesp = bool
-
-    if not niteroreesp then
-        for model, _ in pairs(highlightTablev6) do
-            destroyHighlight(model)
-        end
-    end
-end)
-
-local function hasBrownPart(model)
-    for _, part in ipairs(model:GetDescendants()) do
-        if part:IsA("BasePart") and part.Color == Color3.fromRGB(248, 248, 248) then
-            return true
-        end
-    end
-    return false
-end
-
-local RunService = game:GetService("RunService")
-
-RunService.Heartbeat:Connect(function()
-    if niteroreesp then
-        for _, model in ipairs(game.Workspace:GetChildren()) do
-            if model:IsA("Model") then
-                local esp = highlightTablev6[model]
-                if hasBrownPart(model) then
-                    if not esp then
-                        createHighlight(model)
-                    end
-                else
-                    destroyHighlight(model)
-                end
-            else
-                destroyHighlight(model)
-            end
-        end
-    end
-end)
-
--- Malicious Section --
-
-
-
--- Settings Section --
-local title = Settingssection:Title("Game Settings")
-local isFullBright = false
-local toggle = Settingssection:Toggle("Full Bright", function(bool)
-    isFullBright = bool
-    while isFullBright do
-        wait()
-        game.Lighting.Brightness = 2
-        game.Lighting.Ambient = Color3.new(255/255, 255/255, 255/255)
-        game.Lighting.GlobalShadows = false
-        game.Lighting.FogStart = 999999999999999999
-    end
-end)
-
-
--- Malicioussection:TextBox("Players Name", function(txt)
-   
--- end)
